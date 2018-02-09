@@ -102,7 +102,7 @@ case "$1" in
 
 	fedora)
 	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora-altarch/releases/27/Docker/aarch64/images/Fedora-Docker-Base-27-1.6.aarch64.tar.xz
-	    arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Container-Minimal-Base-27-1.6.armhfp.tar.xz
+	    arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
 	    cmd=fedora
 	    #Tuna已于最近添加了Fedora-altarch仓库，但修改较为麻烦，之后再添加
 	    ;;
