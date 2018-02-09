@@ -1,0 +1,306 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+# input validator and help
+
+
+
+function echoerr() {
+    echo "$@" 1>&2;
+}
+
+function warn() {
+    error $@
+    exit 1
+}
+tips() {
+    tipsc $@
+    exit 1
+}
+tipsc() {
+    echoerr -e "\033[1;32m$@\033[0m"
+}
+function error() {
+    echoerr -e "\033[1;31m$@\033[0m"
+}
+####################################
+sh=bash
+zip=pxvf
+bin=$PREFIX/bin/start${cmd}
+ARCH_LIST=('aarch64' 'arm')
+HOST_ARCH=$(uname -m)
+if [ $HOST_ARCH == "aarch64" ]
+then
+    ARCH="aarch64"
+    
+elif [[ ${HOST_ARCH} =~ .*(arm).* ]]
+then
+    ARCH="arm"
+    
+else
+	warn "未知架构 ${HOST_ARCH}\n只支持(aarch64,arm)"
+fi
+
+## 时间
+if [ $HOST_ARCH == "aarch64" ] 
+then time_arch="arm64"
+elif [[ ${HOST_ARCH} =~ .*(arm).* ]]
+then time_arch="armhf" 
+fi
+####################################
+# 检查依赖
+if [ ! -e $PREFIX/bin/tar ]; then
+        echo "y" | apt install tar
+fi
+
+if [ ! -e $PREFIX/bin/wget ]; then
+	apt update
+        echo "y" | apt install wget
+fi
+
+if [ ! -e $PREFIX/bin/proot ]; then
+        echo "y" | apt install proot
+fi
+
+if [ ! -e $PREFIX/bin/curl ]; then
+	echo "y" | apt install curl
+fi
+
+# 结束
+
+
+
+case "$1" in
+	arch)
+	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
+	    arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
+
+	    cmd=arch
+	    zip=pzxvf
+	    mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
+	    mirrorspath="etc/pacman.d/mirrorlist"
+	    ;;
+
+	centos)
+	      aarch64=http://mirrors.ustc.edu.cn/centos-altarch/7/isos/aarch64/CentOS-7-aarch64-rootfs-7.4.1708.tar.xz
+	      arm=http://hub.meefik.ru/rootfs/centos_arm.tgz
+	      cmd=centos
+	      zip=pxvf
+	      ;;
+	ubuntu)
+	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/xenial/${time_arch}/default/" -o html.html >/dev/null 2>&1
+	    time1=`sed -n '7p' html.html | cut -d'>' -f2 | cut -d'<' -f1`
+	    rm html.html
+	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/xenial/arm64/default/${time1}rootfs.tar.xz
+	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/xenial/armhf/default/${time1}rootfs.tar.xz
+	    cmd=ubuntu
+	    zip=xvf
+	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports xenial main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports xenial-updates main restricted universe multiverse"
+	    mirrorspath="etc/apt/sources.list"
+            ;;
+
+	fedora)
+	    aarch64=http://mirror.math.princeton.edu/pub/fedora-secondary/releases/test/26_Alpha/Docker/aarch64/images/Fedora-Docker-Base-26_Alpha-1.7.aarch64.tar.xz
+	    arm=http://mirrors.ustc.edu.cn/fedora/releases/test/26_Alpha/Docker/armhfp/images/Fedora-Docker-Base-26_Alpha-1.7.armhfp.tar.xz
+	    cmd=fedora
+	    #暂未有源
+	    ;;
+
+	debian)
+	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o html2.html >/dev/null 2>&1
+	time2=`sed -n '7p' html2.html | cut -d'>' -f2 | cut -d'<' -f1`              
+	rm html2.html
+	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
+	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
+	    cmd=debian
+	    zip=xvf
+	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
+	    mirrorspath="etc/apt/sources.list"
+	    ;;
+
+	alpine)
+	   aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/aarch64/alpine-minirootfs-3.6.0-aarch64.tar.gz
+	   arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/armhf/alpine-minirootfs-3.6.0-armhf.tar.gz
+	    cmd=alpine
+	    zip=pxvf
+	    sh=ash
+	    mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
+	    mirrorspath="etc/apk/repositories"
+	    ;;
+
+	aosc)
+	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-arm64/buildkit/aosc-os-buildkit_20170227_arm64.tar.xz
+	    arm=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-armel/buildkit/aosc-os-buildkit_20170227_armel.tar.xz
+	    cmd=aosc
+	    zip=pxvf
+	    #自带国内源
+	    ;;
+#卸载
+#######
+	-r)
+	    case "$2" in
+	      fedora)
+	    chmod -R 0755 ~/$2
+	    rm -rf ~/$2
+	    rm -f $PREFIX/bin/start$2
+	    tips "删除$2成功"
+	    exit 0
+	    ;;
+	      aosc)
+		chmod -R 0755 ~/$2
+		rm -rf ~/$2
+		rm -f $PREFIX/bin/start$2
+		tips "删除$2成功"
+		exit 0
+	          ;;
+	      ubuntu)
+		chmod -R 0755 ~/$2
+		rm -rf ~/$2
+		rm -f $PREFIX/bin/start$2
+		tips "删除$2成功"
+		exit 0
+		;;
+	      arch)
+		chmod -R 0755 ~/$2
+		rm -rf ~/$2
+		rm -f $PREFIX/bin/start$2
+		tips "删除$2成功"
+		exit 0
+		;;
+	      centos)
+		chmod -R 0755 ~/$2
+		rm -rf ~/$2
+		rm -f $PREFIX/bin/start$2
+		tips "删除$2成功"
+		exit 0
+		;;
+	      alpine)
+		chmod -R 0755 ~/$2
+		rm -rf ~/$2
+		rm -f $PREFIX/bin/start$2
+		tips "删除$2成功"
+		exit 0
+		;;
+	      debian)
+		chmod -R 0755 ~/$2
+		rm -rf ~/$2
+		rm -f $PREFIX/bin/start$2
+		tips "删除$2成功"
+		exit 0
+		;;
+	      *)
+		warn "输入错误"
+		exit 0
+		;;
+	    esac
+            ;;
+	*)
+
+echo -e "\033[33m用法:\033[32m $0 [选项] [参数]
+
+atilo更新日期：2017.10.21
+
+fedora				安装fedora
+debian				安装debian
+alpine				安装alpine
+aosc				安装aosc
+arch				安装arch
+ubuntu				安装ubuntu
+centos				安装centos
+-r				删除安装的linux
+   \033[0m"
+exit 2
+esac
+
+
+
+# get the docker image
+
+mkdir ~/${cmd}
+cd ~/${cmd}
+echo -e "\033[32m下载镜像中... \033[0m"
+#下载
+###############################
+if [ ${HOST_ARCH} == "aarch64" ]
+then
+    ARCH="aarch64"
+    url=${aarch64}
+    
+elif [[ $HOST_ARCH =~ .*(arm).* ]]
+then
+    ARCH="arm"
+    url=${arm}
+else
+    die "Unknown architecture ${ARCH}"
+fi
+#......
+if [ -f "${cmd}.tar.xz" ]; then
+    first=1
+    echo "跳过下载..."
+fi
+if [ "${first}" != 1 ];then
+wget ${url} -O ${cmd}.tar.xz
+fi
+
+
+# 解压
+###############################
+if [ ${cmd} == "fedora" ];then
+	tar xvf fedora.tar.xz --strip-components=1 --exclude json --exclude VERSION
+	tar xpf layer.tar
+	chmod +w .
+	rm layer.tar
+	rm fedora.tar.xz
+else
+	proot --link2symlink tar ${zip} ${cmd}.tar.xz
+fi
+
+
+# 设置 DNS
+##########################################
+rm -r ~/${cmd}/etc/resolv.conf 2>/dev/null
+echo "nameserver 119.29.29.29" >> ~/${cmd}/etc/resolv.conf
+echo "nameserver 8.8.8.8" >> ~/${cmd}/etc/resolv.conf
+
+echo "export USER=root" >> ~/${cmd}/etc/profile
+
+
+# 修改源
+##########################################
+echo -e "${mirrors}" > ${mirrorspath}
+
+# 创建启动脚本
+################################################
+cat > ${PREFIX}/bin/start${cmd} <<- EOM
+#!/data/data/com.termux/files/usr/bin/bash
+cd ~
+command="proot"
+command+=" --link2symlink"
+#command+=" -0"
+command+=" -S ${cmd}"
+#command+=" -b /system"
+command+=" -b /sdcard"
+command+=" -b /dev/"
+#command+=" -b /sys/"
+command+=" -b /proc/"
+#uncomment the following line to have access to the home directory of termux
+#command+=" -b /data/data/com.termux/files/home"
+command+=" -w /root"
+command+=" /usr/bin/env -i"
+command+=" HOME=/root"
+command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin"
+command+=" TERM=\${TERM}"
+command+=" /bin/${sh} --login"
+export PROOT_NO_SECCOMP=1
+com="\$@"
+if [ -z "\$1" ];then
+    exec \$command
+else
+    \$command -c "\$com"
+fi
+EOM
+
+chmod +x ${PREFIX}/bin/start${cmd}
+
+# 全部完成
+
+tips "全部完成 \n启动${cmd}的命令'start${cmd}'."
