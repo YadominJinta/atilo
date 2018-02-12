@@ -104,7 +104,6 @@ case "$1" in
 	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora-altarch/releases/27/Docker/aarch64/images/Fedora-Docker-Base-27-1.6.aarch64.tar.xz
 	    arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
 	    cmd=fedora
-	    #Tuna已于最近添加了Fedora-altarch仓库，但修改较为麻烦，之后再添加
 	    ;;
 
 	debian)
@@ -253,9 +252,14 @@ if [ ${cmd} == "fedora" ];then
 	rm layer.tar
 	rm fedora.tar.xz
 	# 设置Fedora的仓库
-	rm ~/${cmd}/etc/yum.repos.d/*
+	mkdir ~/${cmd}/etc/yum.repos.d/bak
+	mv ~/${cmd}/etc/yum.repos.d/* ~/${cmd}/etc/yum.repos.d/bak/
 	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora-updates.repo -O ~/${cmd}/etc/yum.repos.d/fedora-updates.repo
 	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repo.d/fedora.repo
+elif [ ${cmd} == "centos" ];then
+	proot --link2symlink tar ${zip} ${cmd}.tar.xz
+	mv ${cmd}/etc/yum.repos.d/CentOS-Base.repo CentOS-Base.repo.bak
+	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/centos/CentOS-Base.repo -O ~/${cmd}/etc/yum.repos.d/CentOS-Base.repo
 else
 	proot --link2symlink tar ${zip} ${cmd}.tar.xz
 fi
