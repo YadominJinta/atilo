@@ -81,7 +81,7 @@ case "$1" in
 	    ;;
 
 	centos)
-	      aarch64=http://mirrors.ustc.edu.cn/centos-altarch/7/isos/aarch64/CentOS-7-aarch64-rootfs-7.4.1708.tar.xz
+	      aarch64=https://mirrors.ustc.edu.cn/centos-altarch/7/isos/aarch64/CentOS-7-aarch64-rootfs-7.4.1708.tar.xz
 	      # 暂未找到国内的下载链接
 	      arm=http://hub.meefik.ru/rootfs/centos_arm.tgz
 	      cmd=centos
