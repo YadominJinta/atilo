@@ -252,6 +252,10 @@ if [ ${cmd} == "fedora" ];then
 	chmod +w .
 	rm layer.tar
 	rm fedora.tar.xz
+	# 设置Fedora的仓库
+	rm ~/${cmd}/etc/yum.repos.d/*
+	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora-updates.repo -O ~/${cmd}/etc/yum.repos.d/fedora-updates.repo
+	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repo.d/fedora.repo
 else
 	proot --link2symlink tar ${zip} ${cmd}.tar.xz
 fi
