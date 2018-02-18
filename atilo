@@ -37,7 +37,7 @@ then
     ARCH="arm"
     
 else
-	warn "未知架构 ${HOST_ARCH}\n只支持(aarch64,arm)"
+	warn "未知架构/Unknown Arch ${HOST_ARCH}\n只支持/Only suppoert(aarch64,arm)"
 fi
 
 ## 时间
@@ -86,7 +86,6 @@ case "$1" in
 	      arm=http://hub.meefik.ru/rootfs/centos_arm.tgz
 	      cmd=centos
 	      zip=pxvf
-	      # 暂不修改源
 	      ;;
 	ubuntu)
 	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/xenial/${time_arch}/default/" -o html.html >/dev/null 2>&1
@@ -143,53 +142,53 @@ case "$1" in
 	    chmod -R 0755 ~/$2
 	    rm -rf ~/$2
 	    rm -f $PREFIX/bin/start$2
-	    tips "删除$2成功"
+	    tips "删除$2成功/Delete $2 sucessfully"
 	    exit 0
 	    ;;
 	      aosc)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
 		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功"
+		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 	          ;;
 	      ubuntu)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
 		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功"
+		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 		;;
 	      arch)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
 		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功"
+		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 		;;
 	      centos)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
 		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功"
+		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 		;;
 	      alpine)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
 		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功"
+		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 		;;
 	      debian)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
 		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功"
+		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 		;;
 	      *)
-		warn "输入错误"
+		warn "输入错误/Error input"
 		exit 0
 		;;
 	    esac
@@ -198,15 +197,14 @@ case "$1" in
 
 echo -e "\033[33m用法:\033[32m $0 [选项] [参数]
 
-atilo更新日期：2017.10.21
 
-fedora				安装fedora
-debian				安装debian
-alpine				安装alpine
-aosc				安装aosc
-arch				安装arch
-ubuntu				安装ubuntu
-centos				安装centos
+fedora				安装/Install fedora
+debian				安装/Install debian
+alpine				安装/Install alpine
+aosc				安装/Install aosc
+arch				安装/Install archlinux
+ubuntu				安装/Install ubuntu
+centos				安装/Install centos
 -r				删除安装的linux
    \033[0m"
 exit 2
@@ -218,7 +216,7 @@ esac
 
 mkdir ~/${cmd}
 cd ~/${cmd}
-echo -e "\033[32m下载镜像中... \033[0m"
+echo -e "\033[32m下载中/Downloading... \033[0m"
 #下载
 ###############################
 if [ ${HOST_ARCH} == "aarch64" ]
@@ -236,7 +234,7 @@ fi
 #......
 if [ -f "${cmd}.tar.xz" ]; then
     first=1
-    echo "跳过下载..."
+    echo "跳过下载/Skip download..."
 fi
 if [ "${first}" != 1 ];then
 wget ${url} -O ${cmd}.tar.xz
@@ -274,7 +272,7 @@ echo "nameserver 8.8.8.8" >> ~/${cmd}/etc/resolv.conf
 echo "export USER=root" >> ~/${cmd}/etc/profile
 
 
-# 修改源
+# 修改源|
 ##########################################
 echo -e "${mirrors}" > ${mirrorspath}
 
@@ -314,3 +312,4 @@ chmod +x ${PREFIX}/bin/start${cmd}
 # 全部完成
 
 tips "全部完成 \n启动${cmd}的命令'start${cmd}'."
+tips "All done \nuse 'start${cmd}' to run."
