@@ -253,7 +253,7 @@ if [ ${cmd} == "fedora" ];then
 	mkdir ~/${cmd}/etc/yum.repos.d/bak
 	mv ~/${cmd}/etc/yum.repos.d/* ~/${cmd}/etc/yum.repos.d/bak/
 	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora-updates.repo -O ~/${cmd}/etc/yum.repos.d/fedora-updates.repo
-	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repo.d/fedora.repo
+	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repos.d/fedora.repo
 elif [ ${cmd} == "centos" ];then
 	proot --link2symlink tar ${zip} ${cmd}.tar.xz
 	mv ${cmd}/etc/yum.repos.d/CentOS-Base.repo CentOS-Base.repo.bak
