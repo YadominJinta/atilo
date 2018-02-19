@@ -1,5 +1,5 @@
 # Atlio
-A bash script to install linux on termux
+A bash script to install linux on termux  
 在Termux安装Linux的bash脚本
 
 ## Download/下载
@@ -25,7 +25,7 @@ debian         Install/安装debian
 
 ## Note
 ### 1.
-Due to the problem of `termux-exec`(It's very useful but not stable now).You may meet the problem below。
+Due to the problem of `termux-exec`(It's very useful but not stable now).You may meet the problem below.  
 因为termux-exec(十分有用但是尚不稳定)的原因，你可能会遇到以下报错
 ```
 proot error: execve("/usr/bin/env"): No such file or directory
