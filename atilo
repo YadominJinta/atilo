@@ -88,14 +88,14 @@ case "$1" in
 	      zip=pxvf
 	      ;;
 	ubuntu)
-	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/xenial/${time_arch}/default/" -o html.html >/dev/null 2>&1
+	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o html.html >/dev/null 2>&1
 	    time1=`sed -n '7p' html.html | cut -d'>' -f2 | cut -d'<' -f1`
 	    rm html.html
-	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/xenial/arm64/default/${time1}rootfs.tar.xz
-	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/xenial/armhf/default/${time1}rootfs.tar.xz
+	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${time1}rootfs.tar.xz
+	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${time1}rootfs.tar.xz
 	    cmd=ubuntu
 	    zip=xvf
-	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports xenial main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports xenial-updates main restricted universe multiverse"
+	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
 	    mirrorspath="etc/apt/sources.list"
             ;;
 
