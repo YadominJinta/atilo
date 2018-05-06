@@ -100,7 +100,7 @@ case "$1" in
             ;;
 
 	fedora)
-	    aarch64=http://ftp.sjtu.edu.cn/fedora/linux/releases/28/Container/aarch64/images/Fedora-Container-Minimal-Base-28-1.1.aarch64.tar.xz
+	    aarch64=http://ftp.sjtu.edu.cn/fedora/linux/releases/28/Container/aarch64/images/Fedora-Container-Base-28-1.1.aarch64.tar.xz
 	    arm=http://ftp.sjtu.edu.cn/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
 	    cmd=fedora
 	    ;;
