@@ -1,7 +1,7 @@
 [fedora]
 name=Fedora $releasever - $basearch
 failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/$releasever/Everything/$basearch/os/
+baseurl=http://ftp.sjtu.edu.cn/fedora/linux/releases/$releasever/Everything/$basearch/os/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=fedora-$releasever&arch=$basearch
 enabled=1
 metadata_expire=7d

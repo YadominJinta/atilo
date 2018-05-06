@@ -1,7 +1,7 @@
 [updates]
 name=Fedora $releasever - $basearch - Updates
 failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/$releasever/$basearch/
+baseurl=http://ftp.sjtu.edu.cn/fedora/linux/updates/$releasever/$basearch/
 #metalink=https://mirrors.fedoraproject.org/metalink?repo=updates-released-f$releasever&arch=$basearch
 enabled=1
 repo_gpgcheck=0
