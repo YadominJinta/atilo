@@ -80,13 +80,6 @@ case "$1" in
 	    mirrorspath="etc/pacman.d/mirrorlist"
 	    ;;
 
-	centos)
-	      aarch64=https://mirrors.ustc.edu.cn/centos-altarch/7/isos/aarch64/CentOS-7-aarch64-rootfs-7.4.1708.tar.xz
-	      # 暂未找到国内的下载链接
-	      arm=http://hub.meefik.ru/rootfs/centos_arm.tgz
-	      cmd=centos
-	      zip=pxvf
-	      ;;
 	ubuntu)
 	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o html.html >/dev/null 2>&1
 	    time1=`sed -n '7p' html.html | cut -d'>' -f2 | cut -d'<' -f1`
@@ -166,13 +159,6 @@ case "$1" in
 		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 		;;
-	      centos)
-		chmod -R 0755 ~/$2
-		rm -rf ~/$2
-		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功/Delete $2 sucessfully"
-		exit 0
-		;;
 	      alpine)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
@@ -204,7 +190,6 @@ alpine				安装/Install alpine
 aosc				安装/Install aosc
 arch				安装/Install archlinux
 ubuntu				安装/Install ubuntu
-centos				安装/Install centos
 -r				删除安装的linux/Delete Installed
    \033[0m"
 exit 2
@@ -252,12 +237,7 @@ if [ ${cmd} == "fedora" ];then
 	# 设置Fedora的仓库
 	mkdir ~/${cmd}/etc/yum.repos.d/bak
 	mv ~/${cmd}/etc/yum.repos.d/* ~/${cmd}/etc/yum.repos.d/bak/
-	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora-updates.repo -O ~/${cmd}/etc/yum.repos.d/fedora-updates.repo
 	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repos.d/fedora.repo
-elif [ ${cmd} == "centos" ];then
-	proot --link2symlink tar ${zip} ${cmd}.tar.xz
-	mv ${cmd}/etc/yum.repos.d/CentOS-Base.repo CentOS-Base.repo.bak
-	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/centos/CentOS-Base.repo -O ~/${cmd}/etc/yum.repos.d/CentOS-Base.repo
 else
 	proot --link2symlink tar ${zip} ${cmd}.tar.xz
 fi
