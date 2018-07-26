@@ -104,7 +104,7 @@ case "$1" in
 	rm html2.html
 	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
 	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
-	    cmd=debian
+	    cmd=kali
 	    zip=xf
 	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
 	    mirrorspath="etc/apt/sources.list"
@@ -262,7 +262,6 @@ if [ ${cmd} == "fedora" ];then
 else
 	proot --link2symlink tar ${zip} ${cmd}.tar.xz 2>/dev/null
 fi
-rm ${cmd}.tar.xz
 
 # 设置 DNS
 ##########################################
@@ -311,21 +310,22 @@ EOM
 
 chmod +x ${PREFIX}/bin/start${cmd}
 # Upgrade debian to kali
-if [ ${cmd} == "kali"]
-tips "升级中，请勿关闭软件"
-echo '/bin/bash
+if [ ${cmd} == "kali" ]; then
+echo "升级中，请耐性等待/Updating,Please be patient"
+echo -e '#!/bin/bash
 
 apt update
 apt install -y gnupg gnupg1 gnupg2
 apt-key adv --recv ED444FF07D8D0BF6
-kalimirrors="deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib"
-mirrorspath="etc/apt/source.list"
+export kalimirrors="deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib"
+export mirrorspath="/etc/apt/sources.list"
 echo ${kalimirrors} > ${mirrorspath}
 apt update
-apt upgrade -y' > install.sh
+apt upgrade -y' > ~/kali/install.sh
 fi
-$PREFIX/bin/start{cmd} "bash install.sh" && rm install.sh
+$PREFIX/bin/start${cmd} "bash /install.sh" 
+#&& rm install.sh
 # 全部完成
 
-tips "全部完成 \n启动${cmd}的命令'start${cmd}'."
-tips "All done \nuse 'start${cmd}' to run."
+rm ${cmd}.tar.xz
+tips "全部完成 \n启动${cmd}的命令'start${cmd}'.\nAll done \nuse 'start${cmd}' to run."
