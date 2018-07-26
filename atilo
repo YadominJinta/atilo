@@ -24,7 +24,7 @@ function error() {
 }
 ####################################
 sh=bash
-zip=pxvf
+zip=pxf
 bin=$PREFIX/bin/start${cmd}
 ARCH_LIST=('aarch64' 'arm')
 HOST_ARCH=$(uname -m)
@@ -75,7 +75,7 @@ case "$1" in
 	    arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
 
 	    cmd=arch
-	    zip=pzxvf
+	    zip=pzxf
 	    mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
 	    mirrorspath="etc/pacman.d/mirrorlist"
 	    ;;
@@ -87,7 +87,7 @@ case "$1" in
 	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${time1}rootfs.tar.xz
 	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${time1}rootfs.tar.xz
 	    cmd=ubuntu
-	    zip=xvf
+	    zip=xf
 	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
 	    mirrorspath="etc/apt/sources.list"
             ;;
@@ -98,6 +98,18 @@ case "$1" in
 	    cmd=fedora
 	    ;;
 
+	kali)
+	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o html2.html >/dev/null 2>&1
+	time2=`sed -n '7p' html2.html | cut -d'>' -f2 | cut -d'<' -f1`              
+	rm html2.html
+	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
+	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
+	    cmd=debian
+	    zip=xf
+	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
+	    mirrorspath="etc/apt/sources.list"
+	    ;;
+
 	debian)
 	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o html2.html >/dev/null 2>&1
 	time2=`sed -n '7p' html2.html | cut -d'>' -f2 | cut -d'<' -f1`              
@@ -105,7 +117,7 @@ case "$1" in
 	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
 	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
 	    cmd=debian
-	    zip=xvf
+	    zip=xf
 	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
 	    mirrorspath="etc/apt/sources.list"
 	    ;;
@@ -114,7 +126,7 @@ case "$1" in
 	   aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/aarch64/alpine-minirootfs-3.6.0-aarch64.tar.gz
 	   arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/armhf/alpine-minirootfs-3.6.0-armhf.tar.gz
 	    cmd=alpine
-	    zip=pxvf
+	    zip=pxf
 	    sh=ash
 	    mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
 	    mirrorspath="etc/apk/repositories"
@@ -124,7 +136,7 @@ case "$1" in
 	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-arm64/buildkit/aosc-os-buildkit_20170227_arm64.tar.xz
 	    arm=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-armel/buildkit/aosc-os-buildkit_20170227_armel.tar.xz
 	    cmd=aosc
-	    zip=pxvf
+	    zip=pxf
 	    #自带国内源
 	    ;;
 #卸载
@@ -166,6 +178,14 @@ case "$1" in
 		tips "删除$2成功/Delete $2 sucessfully"
 		exit 0
 		;;
+
+	      kali)
+		chmod -R 0755 ~/$2
+		rm -rf ~/$2
+		rm -f $PREFIX/bin/start$2
+		tips "删除$2成功/Delete $2 sucessfully"
+		exit 0
+		;;
 	      debian)
 		chmod -R 0755 ~/$2
 		rm -rf ~/$2
@@ -190,6 +210,7 @@ alpine				安装/Install alpine
 aosc				安装/Install aosc
 arch				安装/Install archlinux
 ubuntu				安装/Install ubuntu
+kali                安装/Install kali
 -r				删除安装的linux/Delete Installed
    \033[0m"
 exit 2
@@ -229,8 +250,8 @@ fi
 # 解压
 ###############################
 if [ ${cmd} == "fedora" ];then
-	tar xvf fedora.tar.xz --strip-components=1 --exclude json --exclude VERSION
-	tar xpf layer.tar
+	tar xf fedora.tar.xz --strip-components=1 --exclude json --exclude VERSION
+	tar xpf layer.tar 2>/dev/null
 	chmod +w .
 	rm layer.tar
 	rm fedora.tar.xz
@@ -239,14 +260,14 @@ if [ ${cmd} == "fedora" ];then
 	mv ~/${cmd}/etc/yum.repos.d/* ~/${cmd}/etc/yum.repos.d/bak/
 	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repos.d/fedora.repo
 else
-	proot --link2symlink tar ${zip} ${cmd}.tar.xz
+	proot --link2symlink tar ${zip} ${cmd}.tar.xz 2>/dev/null
 fi
-
+rm ${cmd}.tar.xz
 
 # 设置 DNS
 ##########################################
 rm -r ~/${cmd}/etc/resolv.conf 2>/dev/null
-echo "nameserver 119.29.29.29" >> ~/${cmd}/etc/resolv.conf
+echo "nameserver 101.6.6.6" >> ~/${cmd}/etc/resolv.conf
 echo "nameserver 8.8.8.8" >> ~/${cmd}/etc/resolv.conf
 
 echo "export USER=root" >> ~/${cmd}/etc/profile
@@ -289,7 +310,20 @@ fi
 EOM
 
 chmod +x ${PREFIX}/bin/start${cmd}
+# Upgrade debian to kali
+if [ ${cmd} == "kali"]
+tips "升级中，请勿关闭软件"
+echo '/bin/bash
 
+apt update
+apt install -y gnupg gnupg1 gnupg2
+apt-key adv --recv ED444FF07D8D0BF6
+kalimirrors="deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib"
+mirrorspath="etc/apt/source.list"
+echo ${kalimirrors} > ${mirrorspath}
+apt update
+apt upgrade -y' > install.sh
+$PREFIX/bin/start{cmd} "bash install.sh" && rm install.sh
 # 全部完成
 
 tips "全部完成 \n启动${cmd}的命令'start${cmd}'."
