@@ -323,6 +323,7 @@ mirrorspath="etc/apt/source.list"
 echo ${kalimirrors} > ${mirrorspath}
 apt update
 apt upgrade -y' > install.sh
+fi
 $PREFIX/bin/start{cmd} "bash install.sh" && rm install.sh
 # 全部完成
 
