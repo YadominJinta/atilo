@@ -321,7 +321,11 @@ export kalimirrors="deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-fr
 export mirrorspath="/etc/apt/sources.list"
 echo ${kalimirrors} > ${mirrorspath}
 apt update
-apt upgrade -y' > ~/kali/install.sh
+apt upgrade -y
+apt clean' > ~/kali/install.sh
+elif [ ${cmd} == "arch" ]
+then
+$PREFIX/usr/bin/start{cmd} "pacman-key --init && pacman-key --populate archlinuxarm "
 fi
 $PREFIX/bin/start${cmd} "bash /install.sh" 
 #&& rm install.sh
