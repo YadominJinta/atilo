@@ -30,7 +30,7 @@ startarch
 ~~CentOS~~ 已经移除/already removed
 ## Note
 ### 1.
-**Already fixed**
+**Already fixed**  
 Due to the problem of `termux-exec`(It's very useful but not stable now).You may meet the problem below.  
 因为termux-exec(十分有用但是尚不稳定)的原因，你可能会遇到以下报错  
 
