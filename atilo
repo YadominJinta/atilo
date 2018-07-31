@@ -52,6 +52,10 @@ if [ ! -e $PREFIX/bin/tar ]; then
         echo "y" | apt install tar
 fi
 
+if [ ! -e $PREFIX/bin/pv  ]; then
+        echo "y" | apt install pv
+fi
+
 if [ ! -e $PREFIX/bin/wget ]; then
 	apt update
         echo "y" | apt install wget
@@ -75,7 +79,7 @@ case "$1" in
 	    arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
 
 	    cmd=arch
-	    zip=pzxf
+	    zip=pzx
 	    mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
 	    mirrorspath="etc/pacman.d/mirrorlist"
 	    ;;
@@ -87,7 +91,7 @@ case "$1" in
 	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${time1}rootfs.tar.xz
 	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${time1}rootfs.tar.xz
 	    cmd=ubuntu
-	    zip=xf
+	    zip=pJx
 	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
 	    mirrorspath="etc/apt/sources.list"
             ;;
@@ -105,7 +109,7 @@ case "$1" in
 	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
 	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
 	    cmd=kali
-	    zip=xf
+	    zip=pzx
 	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
 	    mirrorspath="etc/apt/sources.list"
 	    ;;
@@ -117,7 +121,7 @@ case "$1" in
 	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
 	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
 	    cmd=debian
-	    zip=xf
+	    zip=pzx
 	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
 	    mirrorspath="etc/apt/sources.list"
 	    ;;
@@ -126,7 +130,7 @@ case "$1" in
 	   aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/aarch64/alpine-minirootfs-3.6.0-aarch64.tar.gz
 	   arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/armhf/alpine-minirootfs-3.6.0-armhf.tar.gz
 	    cmd=alpine
-	    zip=pxf
+	    zip=pzx
 	    sh=ash
 	    mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
 	    mirrorspath="etc/apk/repositories"
@@ -136,7 +140,7 @@ case "$1" in
 	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-arm64/buildkit/aosc-os-buildkit_20170227_arm64.tar.xz
 	    arm=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-armel/buildkit/aosc-os-buildkit_20170227_armel.tar.xz
 	    cmd=aosc
-	    zip=pxf
+	    zip=pzx
 	    #自带国内源
 	    ;;
 #卸载
@@ -251,22 +255,21 @@ fi
 ###############################
 if [ ${cmd} == "fedora" ];then
 	tar xf fedora.tar.xz --strip-components=1 --exclude json --exclude VERSION
-	tar xpf layer.tar 2>/dev/null
+	pv layer.tar|tar xp 2>/dev/null
 	chmod +w .
 	rm layer.tar
 	rm fedora.tar.xz
 	# 设置Fedora的仓库
 	mkdir ~/${cmd}/etc/yum.repos.d/bak
-	mv ~/${cmd}/etc/yum.repos.d/* ~/${cmd}/etc/yum.repos.d/bak/
+	mv ~/${cmd}/etc/yum.repos.d/fedora.repo ~/${cmd}/etc/yum.repos.d/bak/
 	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repos.d/fedora.repo
 else
-	proot --link2symlink tar ${zip} ${cmd}.tar.xz 2>/dev/null
+	pv ${cmd}.tar.xz |proot --link2symlink tar ${zip}  
 fi
 
 # 设置 DNS
 ##########################################
 rm -r ~/${cmd}/etc/resolv.conf 2>/dev/null
-echo "nameserver 101.6.6.6" >> ~/${cmd}/etc/resolv.conf
 echo "nameserver 8.8.8.8" >> ~/${cmd}/etc/resolv.conf
 
 echo "export USER=root" >> ~/${cmd}/etc/profile
