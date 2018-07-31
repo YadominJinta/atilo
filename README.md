@@ -21,13 +21,18 @@ ubuntu         Install/安装ubuntu
 debian         Install/安装debian
 kali           Install/安装kali
 -r             Deletee installed Linux/删除已安装的Linux
+
+# e.g
+./atilo arch
+# 等待安装/Wait
+startarch
 ```
 ~~CentOS~~ 已经移除/already removed
 ## Note
 ### 1.
+**Already fixed**
 Due to the problem of `termux-exec`(It's very useful but not stable now).You may meet the problem below.  
 因为termux-exec(十分有用但是尚不稳定)的原因，你可能会遇到以下报错  
-**Already fixed**
 
 ```
 proot error: execve("/usr/bin/env"): No such file or directory

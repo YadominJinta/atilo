@@ -214,7 +214,7 @@ alpine				安装/Install alpine
 aosc				安装/Install aosc
 arch				安装/Install archlinux
 ubuntu				安装/Install ubuntu
-kali                安装/Install kali
+kali				安装/Install kali
 -r				删除安装的linux/Delete Installed
    \033[0m"
 exit 2
