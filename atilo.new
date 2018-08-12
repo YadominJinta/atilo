@@ -1,0 +1,300 @@
+#!/data/data/com.termux/files/usr/bin/bash
+
+version="0.1"
+writer="@YadominJinta @seashell11234455"
+support_linux=("alpine" "aosc" "arch" "debian" "fedora" "kali" "ubuntu" )
+support_arch=("arm" "aarch64" "i686" "x86_64")
+atilo_home=$PREFIX/share/atilo
+atilo_tmp=$PREFIX/tmp/atilo
+
+function tips()
+{
+	echo -e "\033[32m$@\033[0m"
+}
+
+function error()
+{
+	echo -e "\033[1;31m$@\033[0m" 1>&2
+	exit 1
+}
+
+function check_for_req()
+{
+	tips "[ 检查依赖中/Checking for requirements ... ]"
+	requirements=""
+
+	if [ ! -e $PREFIX/bin/tar ]; then
+		requirements="${requirements} tar"
+	fi
+
+	if [ ! -e $PREFIX/bin/proot ]; then
+		requirements="${requirements} proot"
+	fi
+
+	if [ ! -e $PREFIX/bin/pv ]; then
+		requirements="${requirements} pv"
+	fi
+
+	if [ ! -e $PREFIX/bin/curl ]; then
+		requirements="${requirements} curl"
+	fi
+
+	if [ ! -e $PREFIX/bin/grep ]; then
+		requirements="${requirements} grep"
+	fi
+
+
+	if [ ! -z "$requirements" ]; then
+		tips "[ 正在安装依赖项/Installing requirements ... ]"
+		apt install ${requirements} -y
+	fi
+}
+
+function check_for_arch()
+{
+    architecture=${uname -m}
+    for i in ${suppprt_arch[@]}
+    do
+        if [ ${architecture} = ${i} ]; then
+            time_arch=${i}
+        fi
+    done
+    if [ -z ${time_arch} ]; then
+        error "[ 未知的架构/Unknown architecture ${architecture}]"
+	fi
+
+}
+function usage()
+{
+    tips "Atilo"
+    tips "用法/Usage: $0 [命令/command] [参数/Arguments] \n"
+    tips "Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。"
+    tips "Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n"
+    tips "命令/Commands:"
+    tips "list\t\t 列出可用的发行版/list available distributions"
+    tips "remove\t\t 移除已安装的发行版/remove installed distributions"
+    tips "instsll\t\t 安装发行版/instsll distributions"
+    tips "help\t\t 帮助/Show this help"
+}
+
+function list_linux()
+{
+    for i in ${support_linux[@]}
+    do
+        tips $i
+    done
+}
+
+function remove_linux()
+{
+	cd ${atilo_home}
+	if [ -d ${release_name} ]; then
+		chmod -R 0755 ./${release_name}
+		rm -rf ./${release_name}
+		rm -f $PREFIX/bin/start${release_name}
+		tips "[ 删除${release_name}成功/Successfully delete ${release_name} ]"
+		exit 0
+	else
+		error "[ 未能找到/Unable to locate ${release_name} ]"
+	fi
+}
+
+function install_linux()
+{
+	cd $atilo_tmp
+	root=$atilo_home/$release_name
+	if [ ! -d ${root} ]; then
+		mkdir ${root}
+	fi
+
+	tips "[ 正在下载中/Downloading ... ]"
+	if [ -f ${release_name} ]; then
+		tips "[ 跳过下载/Skip download ]"
+	else
+		ls -A | xargs rm -rf 
+		curl "${url}" -o ${release_name} --progress
+	fi
+
+	tips "[ 解压中/Extracting ... ]"
+	if [ "${release_name}" == "fedora" ]; then
+		tar xf fedora --strip-components=1 --exclude json --exclude VERSION
+		pv layer.tar|tar xpC ${root} 2>/dev/null
+		rm -f layer.tar
+		chmod +w ${root}
+		mkdir ${root}/etc/yum.repos.d/bak
+		mv ${root}/etc/yum.repos.d/fedora.repo ${root}/etc/yum.repos.d/bak
+		mv ${root}/etc/yum.repos.d/fedora-updates.repo ${root}/etc/yum.repos.d/bak
+		cat > ${root}/etc/yum.repos.d/fedora.repo <<-EOM
+[fedora]
+name=Fedora \$releasever - \$basearch
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/\$releasever/Everything/\$basearch/os/
+metadata_expire=28d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-\$releasever-\$basearch
+skip_if_unavailable=False
+		EOM
+		cat > ${root}/etc/yum.repos.d/fedora-updates.repo <<-EOM
+[updates]
+name=Fedora \$releasever - \$basearch - Updates
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/\$releasever/Everything/\$basearch/
+enabled=1
+gpgcheck=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-\$releasever-\$basearch
+skip_if_unavailable=False
+		EOM
+	else
+		pv ${release_name} |tar ${zip}C ${root} 2>/dev/null
+	fi
+
+	tips "[ 配置中/Configuring ...]"
+	rm -r ${root}/etc/resolv.conf 2>/dev/null
+	echo "nameserver 8.8.8.8" >> ${root}/etc/resolv.conf
+	echo "export USER=root" >> ${root}/etc/profile
+
+	if [ ! -z "${mirrors}" ]; then
+		cd ${root}
+		echo -e "${mirrors}" > ${mirrorspath}
+	fi
+
+	cat > ${PREFIX}/bin/start${release_name} <<- EOM
+#!/data/data/com.termux/files/usr/bin/bash
+cd \$HOME/.atilo/
+unset LD_PRELOAD
+command="proot"
+command+=" --link2symlink"
+#command+=" -0"
+command+=" -S ${release_name}"
+#command+=" -b /system"
+command+=" -b /sdcard"
+command+=" -b /dev/"
+#command+=" -b /sys/"
+command+=" -b /proc/"
+#uncomment the following line to have access to the home directory of termux
+#command+=" -b /data/data/com.termux/files/home"
+command+=" -w /root"
+command+=" /usr/bin/env -i"
+command+=" HOME=/root"
+command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin"
+command+=" TERM=\${TERM}"
+command+=" /bin/${sh} --login"
+export PROOT_NO_SECCOMP=1
+com="\$@"
+if [ -z "\$1" ];then
+    exec \$command
+else
+    \$command -c "\$com"
+fi
+	EOM
+	chmod +x $PREFIX/bin/start${release_name}
+
+	tips "[ 升级中/Upgrading ... ]"
+	start${release_name} ${upgrade}
+
+	tips "[ 全部完成/All done ]"
+}
+
+function main()
+{
+	release_name=$2
+	case "$1" in
+		install|i)
+			check_for_arch
+			check_for_req
+
+			cd $atilo_tmp
+
+			sh=bash
+
+			case "$2" in
+				fedora)
+					aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/aarch64/images/Fedora-Container-Base-28-1.1.aarch64.tar.xz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+					upgrade="dnf makecache"
+                    x86_64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/x86_64/images/Fedora-Container-Base-28-1.1.x86_64.tar.xz 
+					;;
+				debian)
+					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
+	rm html2.html
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+                    i686=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz 
+                    x86_64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/x86_64/default/${ttime}rootfs.tar.xz 
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
+					mirrorspath="etc/apt/sources.list"
+					upgrade="apt update && apt upgrade"
+					;;
+				alpine)
+                    aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz 
+					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
+                    x86_64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/x86_64/alpine-minirootfs-3.8.0-x86_64.tar.gz 
+                    i686=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/x86/alpine-minirootfs-3.8.0-x86.tar.gz 
+                    zip=pzx
+					sh=ash
+					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
+					mirrorspath="etc/apk/repositories"
+					upgrade="apk update && apk upgrade"
+					;;
+				arch)
+					aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
+                    x86_64=
+					zip=pzx
+					mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
+					mirrorspath="etc/pacman.d/mirrorlist"
+					upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Syy"
+					;;
+				ubuntu)
+					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
+					mirrorspath="etc/apt/sources.list"
+					upgrade="apt update "
+					;;
+				kali)
+					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
+	rm html2.html
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
+					mirrorspath="etc/apt/sources.list"
+					upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y &7 echo -e "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
+					;;
+				*)
+					error "[ 不支持的发行版/Unsupported release $2 ]"
+					;;
+			esac
+
+			case "$time_arch" in
+				arm64)
+					url=$aarch64
+					;;
+				armhf)
+					url=$arm
+					;;
+			esac
+
+			install_linux
+			;;
+		remove|r)
+			remove_linux
+			;;
+		""|help|h)
+			usage
+			;;
+		*)
+			error "[ 未知的操作/Unknown operate $1 ]"
+			;;
+	esac
+}
+
+main "$@"
