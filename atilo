@@ -1,294 +1,241 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-# input validator and help
+version="1.0"
+writer="@YadominJinta @seashell11234455"
+support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" )
+support_arch=("arm" "aarch64")
+atilo_home=$HOME/.atilo
+atilo_tmp=${atilo_home}/tmp
 
-
-
-function echoerr() {
-    echo "$@" 1>&2;
+# Create Dir
+if [ ! -d ${atilo_home} ]; then
+	mkdir -p ${atilo_home}
+fi
+if [ ! -d ${atilo_tmp} ]; then
+	mkdir -p ${atilo_tmp}
+fi
+function tips()
+{
+	echo -e "\033[32m$@\033[0m"
 }
 
-function warn() {
-    error $@
-    exit 1
+function error()
+{
+	echo -e "\033[1;31m$@\033[0m" 1>&2
+	exit 1
 }
-tips() {
-    tipsc $@
-    exit 1
+
+function check_for_req()
+{
+	tips "[ 检查依赖中/Checking for requirements ... ]"
+	requirements=""
+
+	if [ ! -e $PREFIX/bin/tar ]; then
+		requirements="${requirements} tar"
+	fi
+
+	if [ ! -e $PREFIX/bin/proot ]; then
+		requirements="${requirements} proot"
+	fi
+
+	if [ ! -e $PREFIX/bin/pv ]; then
+		requirements="${requirements} pv"
+	fi
+
+	if [ ! -e $PREFIX/bin/curl ]; then
+		requirements="${requirements} curl"
+	fi
+
+	if [ ! -e $PREFIX/bin/grep ]; then
+		requirements="${requirements} grep"
+	fi
+
+
+	if [ ! -z "$requirements" ]; then
+		tips "[ 正在安装依赖项/Installing requirements ... ]"
+		apt install ${requirements} -y
+	fi
 }
-tipsc() {
-    echoerr -e "\033[1;32m$@\033[0m"
+
+function check_for_arch()
+{
+    architecture=$(uname -m)
+
+    if [ ${architecture} == "aarch64" ]
+    then
+        time_arch="arm64"
+        
+    elif [[ ${architecture} =~ .*(arm).* ]]
+    then
+        time_arch="armhf"
+    else
+        error "[ 未知的架构/Unknown architecture ${architecture}]"
+	fi
+
 }
-function error() {
-    echoerr -e "\033[1;31m$@\033[0m"
+function show_usage()
+{
+    tips "Atilo \t ${version}"
+    tips "用法/Usage: $0 [命令/command] [参数/Arguments] \n"
+    tips "Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。"
+    tips "Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n"
+    tips "命令/Commands:"
+    tips "list\t\t 列出可用的发行版/list available distributions"
+    tips "remove\t\t 移除已安装的发行版/remove installed distributions"
+    tips "instsll\t\t 安装发行版/instsll distributions"
+    tips "help\t\t 帮助/Show this help"
+	tips "作者 ${writer} \nWriten by ${writer} "
+	tips "本atilo具有超级牛力/This atilo has super cow power"
 }
-####################################
-sh=bash
-zip=pxf
-bin=$PREFIX/bin/start${cmd}
-ARCH_LIST=('aarch64' 'arm')
-HOST_ARCH=$(uname -m)
-if [ $HOST_ARCH == "aarch64" ]
-then
-    ARCH="aarch64"
-    
-elif [[ ${HOST_ARCH} =~ .*(arm).* ]]
-then
-    ARCH="arm"
-    
-else
-	warn "未知架构/Unknown Arch ${HOST_ARCH}\n只支持/Only suppoert(aarch64,arm)"
-fi
 
-## 时间
-if [ $HOST_ARCH == "aarch64" ] 
-then time_arch="arm64"
-elif [[ ${HOST_ARCH} =~ .*(arm).* ]]
-then time_arch="armhf" 
-fi
-####################################
-# 检查依赖
-if [ ! -e $PREFIX/bin/tar ]; then
-        echo "y" | apt install tar
-fi
+function list_linux()
+{
+	tips "以下为可用的Linux发行版/The followings are available"
+    for i in ${support_linux[@]}
+    do
+        tips $i
+    done
+}
 
-if [ ! -e $PREFIX/bin/pv  ]; then
-        echo "y" | apt install pv
-fi
+function remove_linux()
+{
+	cd ${atilo_home}
+	if [ -d ${release_name} ]; then
+		chmod -R 0755 ./${release_name}
+		rm -rf ./${release_name}
+		rm -f $PREFIX/bin/start${release_name}
+		tips "[ 删除${release_name}成功/Successfully delete ${release_name} ]"
+		exit 0
+	else
+		error "[ 未能找到/Unable to locate ${release_name} ]"
+	fi
+}
 
-if [ ! -e $PREFIX/bin/wget ]; then
-	apt update
-        echo "y" | apt install wget
-fi
+function select_linux()
+{
 
-if [ ! -e $PREFIX/bin/proot ]; then
-        echo "y" | apt install proot
-fi
-
-if [ ! -e $PREFIX/bin/curl ]; then
-	echo "y" | apt install curl
-fi
-
-# 结束
-
-
-
-case "$1" in
-	arch)
-	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
-	    arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
-
-	    cmd=arch
-	    zip=pzx
-	    mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
-	    mirrorspath="etc/pacman.d/mirrorlist"
-	    ;;
-
-	ubuntu)
-	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o html.html >/dev/null 2>&1
-	    time1=`sed -n '7p' html.html | cut -d'>' -f2 | cut -d'<' -f1`
-	    rm html.html
-	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${time1}rootfs.tar.xz
-	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${time1}rootfs.tar.xz
-	    cmd=ubuntu
-	    zip=pJx
-	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
-	    mirrorspath="etc/apt/sources.list"
-            ;;
-
-	fedora)
-	    aarch64=http://ftp.sjtu.edu.cn/fedora/linux/releases/28/Container/aarch64/images/Fedora-Container-Base-28-1.1.aarch64.tar.xz
-	    arm=http://ftp.sjtu.edu.cn/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
-	    cmd=fedora
-	    ;;
-
-	kali)
-	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o html2.html >/dev/null 2>&1
-	time2=`sed -n '7p' html2.html | cut -d'>' -f2 | cut -d'<' -f1`              
+			case "$1" in
+				fedora)
+					aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/aarch64/images/Fedora-Container-Base-28-1.1.aarch64.tar.xz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+					upgrade="dnf makecache"
+					;;
+				debian)
+					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
 	rm html2.html
-	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
-	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
-	    cmd=kali
-	    zip=pzx
-	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
-	    mirrorspath="etc/apt/sources.list"
-	    ;;
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
+					mirrorspath="etc/apt/sources.list"
+					upgrade="apt update && apt upgrade"
+					;;
+				alpine)
+                    aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz 
+					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
+                    zip=pzx
+					sh=ash
+					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
+					mirrorspath="etc/apk/repositories"
+					upgrade="apk update && apk upgrade"
+					;;
+				arch)
+					aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
+					zip=pzx
+					mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
+					mirrorspath="etc/pacman.d/mirrorlist"
+					upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Syy"
+					;;
+				ubuntu)
+					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
+					mirrorspath="etc/apt/sources.list"
+					upgrade="apt update "
+					;;
+				kali)
+					select_linux "debian"
+					upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y && echo -e "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
+					;;
+				*)
+					error "[ 不支持的发行版/Unsupported release $1 ]"
+					;;
+			esac
 
-	debian)
-	    curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o html2.html >/dev/null 2>&1
-	time2=`sed -n '7p' html2.html | cut -d'>' -f2 | cut -d'<' -f1`              
-	rm html2.html
-	    aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${time2}rootfs.tar.xz
-	    arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${time2}rootfs.tar.xz
-	    cmd=debian
-	    zip=pzx
-	    mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian  stretch             main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
-	    mirrorspath="etc/apt/sources.list"
-	    ;;
+}
+function install_linux()
+{
+	cd $atilo_tmp
+	root=$atilo_home/$release_name
+	if [ ! -d ${root} ]; then
+		mkdir ${root}
+	fi
 
-	alpine)
-	   aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/aarch64/alpine-minirootfs-3.6.0-aarch64.tar.gz
-	   arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/releases/armhf/alpine-minirootfs-3.6.0-armhf.tar.gz
-	    cmd=alpine
-	    zip=pzx
-	    sh=ash
-	    mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
-	    mirrorspath="etc/apk/repositories"
-	    ;;
+	tips "[ 正在下载中/Downloading ... ]"
+	if [ -f ${release_name} ]; then
+		tips "[ 跳过下载/Skip download ]"
+	else
+		ls -A | xargs rm -rf 
+		curl "${url}" -o ${release_name} --progress
+	fi
 
-	aosc)
-	    aarch64=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-arm64/buildkit/aosc-os-buildkit_20170227_arm64.tar.xz
-	    arm=https://mirrors.tuna.tsinghua.edu.cn/anthon/aosc-os/os-armel/buildkit/aosc-os-buildkit_20170227_armel.tar.xz
-	    cmd=aosc
-	    zip=pzx
-	    #自带国内源
-	    ;;
-#卸载
-#######
-	-r)
-	    case "$2" in
-	      fedora)
-	    chmod -R 0755 ~/$2
-	    rm -rf ~/$2
-	    rm -f $PREFIX/bin/start$2
-	    tips "删除$2成功/Delete $2 sucessfully"
-	    exit 0
-	    ;;
-	      aosc)
-		chmod -R 0755 ~/$2
-		rm -rf ~/$2
-		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功/Delete $2 sucessfully"
-		exit 0
-	          ;;
-	      ubuntu)
-		chmod -R 0755 ~/$2
-		rm -rf ~/$2
-		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功/Delete $2 sucessfully"
-		exit 0
-		;;
-	      arch)
-		chmod -R 0755 ~/$2
-		rm -rf ~/$2
-		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功/Delete $2 sucessfully"
-		exit 0
-		;;
-	      alpine)
-		chmod -R 0755 ~/$2
-		rm -rf ~/$2
-		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功/Delete $2 sucessfully"
-		exit 0
-		;;
+	tips "[ 解压中/Extracting ... ]"
+	if [ "${release_name}" == "fedora" ]; then
+		tar xf fedora --strip-components=1 --exclude json --exclude VERSION
+		pv layer.tar|tar xpC ${root} 2>/dev/null
+		rm -f layer.tar
+		chmod +w ${root}
+		mkdir ${root}/etc/yum.repos.d/bak
+		mv ${root}/etc/yum.repos.d/fedora.repo ${root}/etc/yum.repos.d/bak
+		mv ${root}/etc/yum.repos.d/fedora-updates.repo ${root}/etc/yum.repos.d/bak
+		cat > ${root}/etc/yum.repos.d/fedora.repo <<-EOM
+[fedora]
+name=Fedora \$releasever - \$basearch
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/\$releasever/Everything/\$basearch/os/
+metadata_expire=28d
+gpgcheck=1
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-\$releasever-\$basearch
+skip_if_unavailable=False
+		EOM
+		cat > ${root}/etc/yum.repos.d/fedora-updates.repo <<-EOM
+[updates]
+name=Fedora \$releasever - \$basearch - Updates
+failovermethod=priority
+baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/\$releasever/Everything/\$basearch/
+enabled=1
+gpgcheck=1
+metadata_expire=6h
+gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-\$releasever-\$basearch
+skip_if_unavailable=False
+		EOM
+	else
+		pv ${release_name} |tar ${zip}C ${root} 2>/dev/null
+	fi
 
-	      kali)
-		chmod -R 0755 ~/$2
-		rm -rf ~/$2
-		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功/Delete $2 sucessfully"
-		exit 0
-		;;
-	      debian)
-		chmod -R 0755 ~/$2
-		rm -rf ~/$2
-		rm -f $PREFIX/bin/start$2
-		tips "删除$2成功/Delete $2 sucessfully"
-		exit 0
-		;;
-	      *)
-		warn "输入错误/Error input"
-		exit 0
-		;;
-	    esac
-            ;;
-	*)
+	tips "[ 配置中/Configuring ...]"
+	rm -r ${root}/etc/resolv.conf 2>/dev/null
+	echo "nameserver 8.8.8.8" >> ${root}/etc/resolv.conf
+	echo "export USER=root" >> ${root}/etc/profile
 
-echo -e "\033[33m用法:\033[32m $0 [选项] [参数]
+	if [ ! -z "${mirrors}" ]; then
+		cd ${root}
+		echo -e "${mirrors}" > ${mirrorspath}
+	fi
 
-
-fedora				安装/Install fedora
-debian				安装/Install debian
-alpine				安装/Install alpine
-aosc				安装/Install aosc
-arch				安装/Install archlinux
-ubuntu				安装/Install ubuntu
-kali				安装/Install kali
--r				删除安装的linux/Delete Installed
-   \033[0m"
-exit 2
-esac
-
-
-
-# get the docker image
-
-mkdir ~/${cmd}
-cd ~/${cmd}
-echo -e "\033[32m下载中/Downloading... \033[0m"
-#下载
-###############################
-if [ ${HOST_ARCH} == "aarch64" ]
-then
-    ARCH="aarch64"
-    url=${aarch64}
-    
-elif [[ $HOST_ARCH =~ .*(arm).* ]]
-then
-    ARCH="arm"
-    url=${arm}
-else
-    die "Unknown architecture ${ARCH}"
-fi
-#......
-if [ -f "${cmd}.tar.xz" ]; then
-    first=1
-    echo "跳过下载/Skip download..."
-fi
-if [ "${first}" != 1 ];then
-wget ${url} -O ${cmd}.tar.xz
-fi
-
-
-# 解压
-###############################
-if [ ${cmd} == "fedora" ];then
-	tar xf fedora.tar.xz --strip-components=1 --exclude json --exclude VERSION
-	pv layer.tar|tar xp 2>/dev/null
-	chmod +w .
-	rm layer.tar
-	rm fedora.tar.xz
-	# 设置Fedora的仓库
-	mkdir ~/${cmd}/etc/yum.repos.d/bak
-	mv ~/${cmd}/etc/yum.repos.d/fedora.repo ~/${cmd}/etc/yum.repos.d/bak/
-	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repos.d/fedora.repo
-else
-	pv ${cmd}.tar.xz |proot --link2symlink tar ${zip} 2>/dev/null
-fi
-
-# 设置 DNS
-##########################################
-rm -r ~/${cmd}/etc/resolv.conf 2>/dev/null
-echo "nameserver 8.8.8.8" >> ~/${cmd}/etc/resolv.conf
-
-echo "export USER=root" >> ~/${cmd}/etc/profile
-
-
-# 修改源|
-##########################################
-echo -e "${mirrors}" > ${mirrorspath}
-
-# 创建启动脚本
-################################################
-cat > ${PREFIX}/bin/start${cmd} <<- EOM
+	cat > ${PREFIX}/bin/start${release_name} <<- EOM
 #!/data/data/com.termux/files/usr/bin/bash
-cd ~
+cd \$HOME/.atilo/
 unset LD_PRELOAD
 command="proot"
 command+=" --link2symlink"
 #command+=" -0"
-command+=" -S ${cmd}"
+command+=" -S ${release_name}"
 #command+=" -b /system"
 command+=" -b /sdcard"
 command+=" -b /dev/"
@@ -309,30 +256,55 @@ if [ -z "\$1" ];then
 else
     \$command -c "\$com"
 fi
-EOM
+	EOM
+	chmod +x $PREFIX/bin/start${release_name}
 
-chmod +x ${PREFIX}/bin/start${cmd}
-# Upgrade debian to kali
-if [ ${cmd} == "kali" ]; then
-echo "升级中，请耐性等待/Updating,Please be patient"
-echo -e '#!/bin/bash
+	tips "[ 升级中/Upgrading ... ]"
+	start${release_name} ${upgrade}
 
-apt update
-apt install -y gnupg gnupg1 gnupg2
-apt-key adv --recv ED444FF07D8D0BF6
-export kalimirrors="deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib"
-export mirrorspath="/etc/apt/sources.list"
-echo ${kalimirrors} > ${mirrorspath}
-apt update
-apt upgrade -y
-apt clean' > ~/kali/install.sh
-elif [ ${cmd} == "arch" ]
-then
-$PREFIX/usr/bin/start{cmd} "pacman-key --init && pacman-key --populate archlinuxarm "
-fi
-$PREFIX/bin/start${cmd} "bash /install.sh" 
-#&& rm install.sh
-# 全部完成
+	tips "[ 全部完成/All done ]"
+}
 
-rm ${cmd}.tar.xz
-tips "全部完成 \n启动${cmd}的命令'start${cmd}'.\nAll done \nuse 'start${cmd}' to run."
+function main()
+{
+	release_name=$2
+	case "$1" in
+		install|in)
+			check_for_arch
+			check_for_req
+			cd ${atilo_home}
+			sh=bash
+			select_linux ${release_name}	
+			case ${time_arch} in
+				arm64)
+					url=${aarch64}
+				;;
+				armhf)
+					url=${arm}
+				;;
+			esac
+			select_linux ${release_name}	
+			install_linux
+			;;
+
+		remove|rm)
+			remove_linux
+			;;
+		list|ls)
+			list_linux
+			;;
+		help)
+		show_usage
+			;;
+		"")
+		show_usage
+		error "[ 请指定一个命令/A command is needed ]"
+		;;
+		*)
+			error "[ 未知的命令/Unkown operation"
+			;;
+		
+	esac
+}
+
+main "$@"
