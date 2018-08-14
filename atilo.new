@@ -1,12 +1,19 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-version="0.1"
+version="1.0"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "aosc" "arch" "debian" "fedora" "kali" "ubuntu" )
-support_arch=("arm" "aarch64" "i686" "x86_64")
-atilo_home=$PREFIX/share/atilo
-atilo_tmp=$PREFIX/tmp/atilo
+support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" )
+support_arch=("arm" "aarch64")
+atilo_home=$HOME/.atilo
+atilo_tmp=${atilo_home}/tmp
 
+# Create Dir
+if [ ! -d ${atilo_home} ]; then
+	mkdir -p ${atilo_home}
+fi
+if [ ! -d ${atilo_tmp} ]; then
+	mkdir -p ${atilo_tmp}
+fi
 function tips()
 {
 	echo -e "\033[32m$@\033[0m"
@@ -64,9 +71,9 @@ function check_for_arch()
 	fi
 
 }
-function usage()
+function show_usage()
 {
-    tips "Atilo"
+    tips "Atilo \t ${version}"
     tips "用法/Usage: $0 [命令/command] [参数/Arguments] \n"
     tips "Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。"
     tips "Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n"
@@ -75,10 +82,13 @@ function usage()
     tips "remove\t\t 移除已安装的发行版/remove installed distributions"
     tips "instsll\t\t 安装发行版/instsll distributions"
     tips "help\t\t 帮助/Show this help"
+	tips "作者 ${writer} \nWriten by ${writer} "
+	tips "本atilo具有超级牛力/This atilo has super cow power"
 }
 
 function list_linux()
 {
+	tips "以下为可用的Linux发行版/The followings are available"
     for i in ${support_linux[@]}
     do
         tips $i
@@ -99,6 +109,63 @@ function remove_linux()
 	fi
 }
 
+function select_linux()
+{
+
+			case "$1" in
+				fedora)
+					aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/aarch64/images/Fedora-Container-Base-28-1.1.aarch64.tar.xz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+					upgrade="dnf makecache"
+					;;
+				debian)
+					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
+	rm html2.html
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
+					mirrorspath="etc/apt/sources.list"
+					upgrade="apt update && apt upgrade"
+					;;
+				alpine)
+                    aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz 
+					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
+                    zip=pzx
+					sh=ash
+					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
+					mirrorspath="etc/apk/repositories"
+					upgrade="apk update && apk upgrade"
+					;;
+				arch)
+					aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
+					zip=pzx
+					mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
+					mirrorspath="etc/pacman.d/mirrorlist"
+					upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Syy"
+					;;
+				ubuntu)
+					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
+					mirrorspath="etc/apt/sources.list"
+					upgrade="apt update "
+					;;
+				kali)
+					select_linux "debian"
+					upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y &7 echo -e "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
+					;;
+				*)
+					error "[ 不支持的发行版/Unsupported release $1 ]"
+					;;
+			esac
+
+}
 function install_linux()
 {
 	cd $atilo_tmp
@@ -200,100 +267,41 @@ function main()
 {
 	release_name=$2
 	case "$1" in
-		install|i)
+		install|in)
 			check_for_arch
 			check_for_req
-
-			cd $atilo_tmp
-
+			cd ${atilo_home}
 			sh=bash
-
-			case "$2" in
-				fedora)
-					aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/aarch64/images/Fedora-Container-Base-28-1.1.aarch64.tar.xz
-					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
-					upgrade="dnf makecache"
-                    x86_64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/x86_64/images/Fedora-Container-Base-28-1.1.x86_64.tar.xz 
-					;;
-				debian)
-					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
-					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
-	rm html2.html
-					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
-					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
-                    i686=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz 
-                    x86_64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/x86_64/default/${ttime}rootfs.tar.xz 
-					zip=pJx
-					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
-					mirrorspath="etc/apt/sources.list"
-					upgrade="apt update && apt upgrade"
-					;;
-				alpine)
-                    aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz 
-					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
-                    x86_64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/x86_64/alpine-minirootfs-3.8.0-x86_64.tar.gz 
-                    i686=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/x86/alpine-minirootfs-3.8.0-x86.tar.gz 
-                    zip=pzx
-					sh=ash
-					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
-					mirrorspath="etc/apk/repositories"
-					upgrade="apk update && apk upgrade"
-					;;
-				arch)
-					aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
-					arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
-                    x86_64=
-					zip=pzx
-					mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
-					mirrorspath="etc/pacman.d/mirrorlist"
-					upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Syy"
-					;;
-				ubuntu)
-					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
-					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
-					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
-					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
-					zip=pJx
-					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
-					mirrorspath="etc/apt/sources.list"
-					upgrade="apt update "
-					;;
-				kali)
-					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
-					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
-	rm html2.html
-					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
-					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
-					zip=pJx
-					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
-					mirrorspath="etc/apt/sources.list"
-					upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y &7 echo -e "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
-					;;
-				*)
-					error "[ 不支持的发行版/Unsupported release $2 ]"
-					;;
-			esac
-
-			case "$time_arch" in
-				arm64)
-					url=$aarch64
-					;;
-				armhf)
-					url=$arm
-					;;
+			select_linux ${release_name}	
+			case ${time_arch} in
+				aarch64)
+					url=${aarch64}
+				;;
+				arm)
+					url=${arm}
+				;;
 			esac
 
 			install_linux
 			;;
-		remove|r)
+
+		remove|rm)
 			remove_linux
 			;;
-		""|help|h)
-			usage
+		list|ls)
+			list_linux
 			;;
+		help)
+		show_usage
+			;;
+		"")
+		show_usage
+		error "[ 请指定一个命令/A command is needed ]"
+		;;
 		*)
-			error "[ 未知的操作/Unknown operate $1 ]"
+			error "[ 未知的命令/Unkown operation"
 			;;
+		
 	esac
 }
 
