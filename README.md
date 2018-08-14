@@ -36,6 +36,9 @@ fedora
 kali
 ubuntu
 ```
+## 群组/Group
+QQ:[Termux社](https://jq.qq.com/?_wv=1027&k=5jGvbsU)
+Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 
 ## Note
 All the download link is set in China
