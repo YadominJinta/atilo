@@ -83,6 +83,7 @@ function show_usage()
     tips "list\t\t 列出可用的发行版/list available distributions"
     tips "remove\t\t 移除已安装的发行版/remove installed distributions"
     tips "instsll\t\t 安装发行版/instsll distributions"
+    tips "clean\t\t 删除缓存/delete tmps"
     tips "help\t\t 帮助/Show this help"
 	tips "作者 ${writer} \nWriten by ${writer} "
 	tips "本atilo具有超级牛力/This atilo has super cow power"
@@ -167,6 +168,11 @@ function select_linux()
 					;;
 			esac
 
+}
+function clean_tmp()
+{
+    tips "正在清除缓存/Cleaning tmps"
+    rm ${atilo_tmp}/*
 }
 function install_linux()
 {
@@ -296,6 +302,9 @@ function main()
 		help)
 		show_usage
 			;;
+        clean)
+            clean_tmp
+            ;;
 		"")
 		show_usage
 		error "[ 请指定一个命令/A command is needed ]"
