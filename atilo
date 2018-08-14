@@ -264,7 +264,7 @@ if [ ${cmd} == "fedora" ];then
 	mv ~/${cmd}/etc/yum.repos.d/fedora.repo ~/${cmd}/etc/yum.repos.d/bak/
 	wget https://raw.githubusercontent.com/YadominJinta/atilo/master/repos/fedora/${ARCH}/fedora.repo -O ~/${cmd}/etc/yum.repos.d/fedora.repo
 else
-	pv ${cmd}.tar.xz |proot --link2symlink tar ${zip}  
+	pv ${cmd}.tar.xz |proot --link2symlink tar ${zip} 2>/dev/null
 fi
 
 # 设置 DNS
