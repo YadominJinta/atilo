@@ -124,7 +124,7 @@ function select_linux()
 				debian)
 					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
 					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
-	rm html2.html
+	rm tmp.html
 					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
 					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
 					zip=pJx
@@ -151,6 +151,7 @@ function select_linux()
 					;;
 				ubuntu)
 					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+                    rm tmp.html
 					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
 					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz

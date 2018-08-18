@@ -25,7 +25,7 @@ Writen by @YadominJinta @seashell11234455
 本atilo具有超级牛力/This atilo has super cow power
 ```
 
-## 支持的发行版
+## Support Linux/支持的发行版
 ``` bash
 ./atilo list
 以下为可用的Linux发行版/The followings are available
@@ -36,9 +36,14 @@ fedora
 kali
 ubuntu
 ```
-## 群组/Group
+
+## GUI/图形
+[在termux上开启图形化](https://yadominjinta.github.io/2018/07/30/GUI-on-termux.html)
+## Group/群组
 QQ:[Termux社](https://jq.qq.com/?_wv=1027&k=5jGvbsU)  
 Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 
 ## Note
-All the download link is set in China
+All the download link is set in China/所有的下载链接，源，都在国内
+
+
