@@ -137,7 +137,7 @@ function select_linux()
 					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
                     zip=pzx
 					sh=ash
-					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.6/community"
+					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/community"
 					mirrorspath="etc/apk/repositories"
 					upgrade="apk update && apk upgrade"
 					;;
@@ -270,6 +270,7 @@ fi
 	start${release_name} ${upgrade}
 
 	tips "[ 全部完成/All done ]"
+    tips "start${release_name} 以开始/To start"
 }
 
 function main()
