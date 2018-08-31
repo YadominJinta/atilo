@@ -39,6 +39,9 @@ ubuntu
 
 ## GUI/图形
 [在termux上开启图形化](https://yadominjinta.github.io/2018/07/30/GUI-on-termux.html)
+
+[Using GUI on termux](https://yadominjinta.github.io/2018/08/18/GUI-on-termux-EN.html)
+
 ## Group/群组
 QQ:[Termux社](https://jq.qq.com/?_wv=1027&k=5jGvbsU)  
 Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
