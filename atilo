@@ -147,7 +147,7 @@ function select_linux()
 					zip=pzx
 					mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
 					mirrorspath="etc/pacman.d/mirrorlist"
-					upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Syy"
+					upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
 					;;
 				ubuntu)
 					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
