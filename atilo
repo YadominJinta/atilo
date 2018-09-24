@@ -53,6 +53,7 @@ function check_for_req()
 
 	if [ ! -z "$requirements" ]; then
 		tips "[ 正在安装依赖项/Installing requirements ... ]"
+        apt update
 		apt install ${requirements} -y
 	fi
 }
@@ -80,7 +81,7 @@ function show_usage()
     tips "Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。"
     tips "Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n"
     tips "命令/Commands:"
-    tips "list\t\t 列出可用的发行版/list available distributions"
+    tips "list\t\t 列出可用的和已安装发行版/list available and installed distributions"
     tips "remove\t\t 移除已安装的发行版/remove installed distributions"
     tips "instsll\t\t 安装发行版/instsll distributions"
     tips "clean\t\t 删除缓存/delete tmps"
@@ -95,6 +96,14 @@ function list_linux()
     for i in ${support_linux[@]}
     do
         tips $i
+    done
+    tips "\n已安装/Installed"
+    cd ${atilo_home}
+    for i in $(ls ./)
+    do
+        if [ $i != "tmp" ]; then
+            tips $i
+        fi
     done
 }
 

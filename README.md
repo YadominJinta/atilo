@@ -16,7 +16,7 @@ Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的ba
 Atilo is a bash script to help you install some GNU/Linux distributions on Termux.
 
 命令/Commands:
-list             列出可用的发行版/list available distributions
+list             列出可用的和已安装的发行版/list available and installed distributions
 remove           移除已安装的发行版/remove installed distributions
 instsll          安装发行版/instsll distributions
 help             帮助/Show this help
