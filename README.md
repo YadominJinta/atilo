@@ -18,7 +18,7 @@ Atilo is a bash script to help you install some GNU/Linux distributions on Termu
 命令/Commands:
 list             列出可用的和已安装的发行版/list available and installed distributions
 remove           移除已安装的发行版/remove installed distributions
-instsll          安装发行版/instsll distributions
+install          安装发行版/install distributions
 help             帮助/Show this help
 作者 @YadominJinta @seashell11234455
 Writen by @YadominJinta @seashell11234455
