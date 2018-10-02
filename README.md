@@ -2,16 +2,18 @@
 A bash script to install linux on termux  
   
 中文用户[点击这里](https://github.com/YadominJinta/atilo/blob/master/README_CN.md)
-## Download/下载
+## Installation
+**Please go to the release page to download the latest version**
 ``` bash
 pkg in curl
-curl https://raw.githubusercontent.com/YadominJinta/atilo/master/atilo -o ~/atilo 
-chmod +x atilo
+curl -LO https://github.com/YadominJinta/atilo/releases/download/$VERSION/atilo.deb
+dpkg -i atilo.deb
+apt install -f
 ```
 
-## Usage/使用方法
+## Usage
 ``` bash
-./atilo [command] [Arguments]
+atilo [command] [Arguments]
 Atilo is a bash script to help you install some GNU/Linux distributions on Termux.
 
 命令/Commands:

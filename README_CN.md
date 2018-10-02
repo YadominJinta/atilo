@@ -1,16 +1,18 @@
 # Atilo
 在Termux安装Linux的bash脚本
 
-## 下载
+## 安装
+**请前往Release页面查看最新的release**
 ``` bash
 pkg in curl
-curl https://raw.githubusercontent.com/YadominJinta/atilo/master/atilo_cn -o ~/atilo 
-chmod +x atilo
+curl -LO https://github.com/YadominJinta/atilo/releases/download/v1.1/atilo-cn.deb
+dpkg -i atilo-cn.deb
+apt install -f
 ```
 
 ## 使用方法
 ``` bash
-./atilo [命令] [参数]
+atilo [命令] [参数]
 Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。
 
 命令/Commands:
