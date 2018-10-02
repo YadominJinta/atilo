@@ -2,7 +2,7 @@
 
 version="1.0"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" )
+support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "opensuse")
 support_arch=("arm" "aarch64")
 atilo_home=$HOME/.atilo
 atilo_tmp=${atilo_home}/tmp
@@ -27,7 +27,7 @@ function error()
 
 function check_for_req()
 {
-	tips "[ 检查依赖中/Checking for requirements ... ]"
+	tips "[ Checking for requirements ... ]"
 	requirements=""
 
 	if [ ! -e $PREFIX/bin/tar ]; then
@@ -52,7 +52,7 @@ function check_for_req()
 
 
 	if [ ! -z "$requirements" ]; then
-		tips "[ 正在安装依赖项/Installing requirements ... ]"
+		tips "[ Installing requirements ... ]"
         apt update
 		apt install ${requirements} -y
 	fi
@@ -70,34 +70,38 @@ function check_for_arch()
     then
         time_arch="armhf"
     else
-        error "[ 未知的架构/Unknown architecture ${architecture}]"
+        error "[ Unknown architecture ${architecture}]"
 	fi
 
 }
 function show_usage()
 {
     tips "Atilo \t ${version}"
-    tips "用法/Usage: $0 [命令/command] [参数/Arguments] \n"
-    tips "Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。"
+    tips "Usage: $0 [command] [Arguments] \n"
     tips "Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n"
-    tips "命令/Commands:"
-    tips "list\t\t 列出可用的和已安装发行版/list available and installed distributions"
-    tips "remove\t\t 移除已安装的发行版/remove installed distributions"
-    tips "instsll\t\t 安装发行版/instsll distributions"
-    tips "clean\t\t 删除缓存/delete tmps"
-    tips "help\t\t 帮助/Show this help"
-	tips "作者 ${writer} \nWriten by ${writer} "
-	tips "本atilo具有超级牛力/This atilo has super cow power"
+    tips "Commands:"
+    tips "list\t\t list available and installed distributions"
+    tips "   --installed   list installed distributions"
+    tips "remove\t\t remove installed distributions"
+    tips "instsll\t\t instsll distributions"
+    tips "clean\t\t delete tmps"
+    tips "help\t\t Show this help"
+	tips "Writen by ${writer} "
+	tips "This atilo has super cow power"
 }
 
 function list_linux()
 {
-	tips "以下为可用的Linux发行版/The followings are available"
+	tips "The followings are available"
     for i in ${support_linux[@]}
     do
         tips $i
     done
-    tips "\n已安装/Installed"
+}
+
+function local_linux()
+{
+    tips "Installed \n"
     cd ${atilo_home}
     for i in $(ls ./)
     do
@@ -105,8 +109,8 @@ function list_linux()
             tips $i
         fi
     done
-}
 
+}
 function remove_linux()
 {
 	cd ${atilo_home}
@@ -114,10 +118,10 @@ function remove_linux()
 		chmod -R 0755 ./${release_name}
 		rm -rf ./${release_name}
 		rm -f $PREFIX/bin/start${release_name}
-		tips "[ 删除${release_name}成功/Successfully delete ${release_name} ]"
+		tips "[ Successfully delete ${release_name} ]"
 		exit 0
 	else
-		error "[ 未能找到/Unable to locate ${release_name} ]"
+		error "[ Unable to locate ${release_name} ]"
 	fi
 }
 
@@ -126,62 +130,50 @@ function select_linux()
 
 			case "$1" in
 				fedora)
-					aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/aarch64/images/Fedora-Container-Base-28-1.1.aarch64.tar.xz
-					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+					aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/28/Container/aarch64/images/Fedora-Container-Minimal-Base-28-1.1.aarch64.tar.xz
+					arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
 					upgrade="dnf makecache"
 					;;
 				debian)
-					curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
-					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
-	rm tmp.html
-					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
-					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
-					zip=pJx
-					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
-					mirrorspath="etc/apt/sources.list"
+                    aarch64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm64v8/stretch/slim/rootfs.tar.xz 
+                    arm=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm32v7/stretch/slim/rootfs.tar.xz 
+					zip=Jx
 					upgrade="apt update && apt upgrade"
 					;;
 				alpine)
-                    aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz 
-					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
+                    aarch64=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz
+                    arm=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
                     zip=pzx
 					sh=ash
-					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/community"
-					mirrorspath="etc/apk/repositories"
 					upgrade="apk update && apk upgrade"
 					;;
 				arch)
-					aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
-					arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
+                    aarch64=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
+                    arm=http://fl.us.mirror.archlinuxarm.org/os/ArchLinuxARM-armv7-latest.tar.gz
 					zip=pzx
-					mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
-					mirrorspath="etc/pacman.d/mirrorlist"
 					upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
 					;;
 				ubuntu)
-					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
-					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
-					rm tmp.html
-					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
-					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
-					zip=pJx
-					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
-					mirrorspath="etc/apt/sources.list"
+					aarch64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-arm64-root.tar.gz
+                    arm=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-armhf-root.tar.gz
+					zip=zx
 					upgrade="apt update "
 					;;
 				kali)
-					select_linux "debian"
-					upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y && echo -e "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
+                    aarch64=https://build.nethunter.com/kalifs/kalifs-20170903/kalifs-arm64-minimal.tar.xz
+                    arm=https://build.nethunter.com/kalifs/kalifs-latest/kalifs-armhf-minimal.tar.xz
+                    zip=Jx
+                    upgrade="apt update "
 					;;
 				*)
-					error "[ 不支持的发行版/Unsupported release $1 ]"
+					error "[ Unsupported release $1 ]"
 					;;
 			esac
 
 }
 function clean_tmp()
 {
-    tips "正在清除缓存/Cleaning tmps"
+    tips "Cleaning tmps"
     rm ${atilo_tmp}/*
 }
 function install_linux()
@@ -192,49 +184,25 @@ function install_linux()
 		mkdir ${root}
 	fi
 
-	tips "[ 正在下载中/Downloading ... ]"
+	tips "[ Downloading ... ]"
 	if [ -f ${release_name} ]; then
-		tips "[ 跳过下载/Skip download ]"
+		tips "[ Skip download ]"
 	else
 		ls -A | xargs rm -rf 
 		curl "${url}" -o ${release_name} --progress
 	fi
 
-	tips "[ 解压中/Extracting ... ]"
+	tips "[ Extracting ... ]"
 	if [ "${release_name}" == "fedora" ]; then
 		tar xf fedora --strip-components=1 --exclude json --exclude VERSION
-		pv layer.tar|tar xpC ${root} 2>/dev/null
+		pv layer.tar|proot --link2symlink tar xpC ${root} 2>/dev/null
 		rm -f layer.tar
 		chmod +w ${root}
-		mkdir ${root}/etc/yum.repos.d/bak
-		mv ${root}/etc/yum.repos.d/fedora.repo ${root}/etc/yum.repos.d/bak
-		mv ${root}/etc/yum.repos.d/fedora-updates.repo ${root}/etc/yum.repos.d/bak
-		cat > ${root}/etc/yum.repos.d/fedora.repo <<-EOM
-[fedora]
-name=Fedora \$releasever - \$basearch
-failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/\$releasever/Everything/\$basearch/os/
-metadata_expire=28d
-gpgcheck=1
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-\$releasever-\$basearch
-skip_if_unavailable=False
-		EOM
-		cat > ${root}/etc/yum.repos.d/fedora-updates.repo <<-EOM
-[updates]
-name=Fedora \$releasever - \$basearch - Updates
-failovermethod=priority
-baseurl=https://mirrors.tuna.tsinghua.edu.cn/fedora/updates/\$releasever/Everything/\$basearch/
-enabled=1
-gpgcheck=1
-metadata_expire=6h
-gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-fedora-\$releasever-\$basearch
-skip_if_unavailable=False
-		EOM
 	else
-		pv ${release_name} |tar ${zip}C ${root} 2>/dev/null
+		pv ${release_name} |proot --link2symlink tar ${zip}C ${root} 2>/dev/null
 	fi
 
-	tips "[ 配置中/Configuring ...]"
+	tips "[ Configuring ...]"
 	rm -r ${root}/etc/resolv.conf 2>/dev/null
 	echo "nameserver 8.8.8.8" >> ${root}/etc/resolv.conf
 	echo "export USER=root" >> ${root}/etc/profile
@@ -275,11 +243,11 @@ fi
 	EOM
 	chmod +x $PREFIX/bin/start${release_name}
 
-	tips "[ 升级中/Upgrading ... ]"
+	tips "[ Upgrading ... ]"
 	start${release_name} ${upgrade}
 
-	tips "[ 全部完成/All done ]"
-    tips "start${release_name} 以开始/To start"
+	tips "[ All done ]"
+    tips "start${release_name} To start"
 }
 
 function main()
@@ -308,7 +276,11 @@ function main()
 			remove_linux
 			;;
 		list|ls)
-			list_linux
+            if [[ $2 == "--installed" ]]; then
+                local_linux
+            else
+			    list_linux 
+            fi
 			;;
 		help)
 		show_usage
@@ -318,10 +290,10 @@ function main()
             ;;
 		"")
 		show_usage
-		error "[ 请指定一个命令/A command is needed ]"
+		error "[ A command is needed ]"
 		;;
 		*)
-			error "[ 未知的命令/Unkown operation"
+			error "[ Unkown operation ]"
 			;;
 		
 	esac

@@ -1,4 +1,4 @@
-# Atlio
+# Atilo
 在Termux安装Linux的bash脚本
 
 ## 下载
@@ -19,7 +19,6 @@ remove           移除已安装的发行版
 instsll          安装发行版
 help             帮助
 作者 @YadominJinta @seashell11234455
-Writen by @YadominJinta @seashell11234455
 本atilo具有超级牛力
 ```
 
@@ -36,19 +35,20 @@ ubuntu
 
 ./atilo list --installed
 已安装
+
 alpine
 ```
 
 ## 图形
 [在termux上开启图形化](https://yadominjinta.github.io/2018/07/30/GUI-on-termux.html)
 
-[Using GUI on termux](https://yadominjinta.github.io/2018/08/18/GUI-on-termux-EN.html)
 
 ## 群组
 QQ:[Termux社](https://jq.qq.com/?_wv=1027&k=5jGvbsU)  
 Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 
 ## Note
-所有的下载链接，源，都在国内
+1.仅有有国内镜像的发行版才会加到CN版中  
+2.CN版的Kali是用Debian升级得到的
 
 
