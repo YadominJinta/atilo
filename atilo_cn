@@ -83,7 +83,7 @@ function show_usage()
     tips "list\t\t 列出可用的Linux"
     tips "   --installed   列出已安装的Linux"
     tips "remove\t\t 移除已安装的Linux"
-    tips "instsll\t\t 安装Linux"
+    tips "install\t\t 安装Linux"
     tips "clean\t\t 删除缓存"
     tips "help\t\t 帮助"
 	tips "作者 ${writer} "

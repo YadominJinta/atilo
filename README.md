@@ -20,7 +20,7 @@ Atilo is a bash script to help you install some GNU/Linux distributions on Termu
 list             list available distributions
    --installed   list installed distributions
 remove           remove installed distributions
-instsll          instsll distributions
+install          install distributions
 help             Show this help
 Writen by @YadominJinta @seashell11234455
 

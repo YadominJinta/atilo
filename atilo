@@ -83,7 +83,7 @@ function show_usage()
     tips "list\t\t list available and installed distributions"
     tips "   --installed   list installed distributions"
     tips "remove\t\t remove installed distributions"
-    tips "instsll\t\t instsll distributions"
+    tips "install\t\t install distributions"
     tips "clean\t\t delete tmps"
     tips "help\t\t Show this help"
 	tips "Writen by ${writer} "
