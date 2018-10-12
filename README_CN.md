@@ -18,7 +18,7 @@ Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的ba
 命令/Commands:
 list             列出可用的和已安装的发行版
 remove           移除已安装的发行版
-instsll          安装发行版
+install          安装发行版
 help             帮助
 作者 @YadominJinta @seashell11234455
 本atilo具有超级牛力
