@@ -164,6 +164,7 @@ function select_linux()
                     arm=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-armhf-root.tar.gz
 					zip=zx
 					upgrade="apt update "
+                    ;;
 				kali)
                     aarch64=https://build.nethunter.com/kalifs/kalifs-20170903/kalifs-arm64-minimal.tar.xz
                     arm=https://build.nethunter.com/kalifs/kalifs-latest/kalifs-armhf-minimal.tar.xz
