@@ -2,7 +2,7 @@
 
 version="1.1 CN"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" )
+support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" )
 support_arch=("arm" "aarch64")
 atilo_home=$HOME/.atilo
 atilo_tmp=${atilo_home}/tmp
@@ -163,7 +163,7 @@ function select_linux()
 					mirrorspath="etc/pacman.d/mirrorlist"
 					upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
 					;;
-				ubuntu)
+				ubuntuilts)
 					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
 					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 					rm tmp.html
@@ -171,6 +171,17 @@ function select_linux()
 					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
 					zip=pJx
 					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
+					mirrorspath="etc/apt/sources.list"
+					upgrade="apt update "
+					;;
+                ubuntu)
+					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
+					rm tmp.html
+					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/arm64/default/${ttime}rootfs.tar.xz
+					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/armhf/default/${ttime}rootfs.tar.xz
+					zip=pJx
+					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic-updates main restricted universe multiverse"
 					mirrorspath="etc/apt/sources.list"
 					upgrade="apt update "
 					;;

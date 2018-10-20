@@ -34,6 +34,9 @@ debian
 fedora
 kali
 ubuntu
+# Ubuntu 18.10
+ubuntults
+# Ubuntu 18.04 LTS
 
 ./atilo list --installed
 已安装

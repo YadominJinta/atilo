@@ -38,6 +38,9 @@ debian
 fedora
 kali
 ubuntu
+# Ubuntu Cosmic
+ubuntults
+# Ubuntu Bionic LTS
 
 ./atilo list --installed
 Installed 
