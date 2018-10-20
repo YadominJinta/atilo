@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-version="1.1 CN"
+version="1.2 CN"
 writer="@YadominJinta @seashell11234455"
 support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" )
 support_arch=("arm" "aarch64")
@@ -175,7 +175,7 @@ function select_linux()
 					upgrade="apt update "
 					;;
                 ubuntu)
-					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
 					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 					rm tmp.html
 					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/arm64/default/${ttime}rootfs.tar.xz

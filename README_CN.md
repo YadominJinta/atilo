@@ -4,8 +4,9 @@
 ## 安装
 **请前往Release页面查看最新的release**
 ``` bash
+VERSION=1.2
 pkg in curl
-curl -LO https://github.com/YadominJinta/atilo/releases/download/v1.1/atilo-cn.deb
+curl -LO https://github.com/YadominJinta/atilo/releases/download/$VERSION/atilo-cn.deb
 dpkg -i atilo-cn.deb
 apt install -f
 ```

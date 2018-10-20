@@ -3,8 +3,9 @@ A bash script to install linux on termux
   
 中文用户[点击这里](https://github.com/YadominJinta/atilo/blob/master/README_CN.md)
 ## Installation
-**Please go to the release page to download the latest version**
+**Please go to the release page to check the latest version**
 ``` bash
+VERSION=1.2
 pkg in curl
 curl -LO https://github.com/YadominJinta/atilo/releases/download/$VERSION/atilo.deb
 dpkg -i atilo.deb
