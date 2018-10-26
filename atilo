@@ -1,8 +1,8 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-version="1.2 EN"
+version="1.2.1 EN"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults")
+support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos")
 support_arch=("arm" "aarch64")
 atilo_home=$HOME/.atilo
 atilo_tmp=${atilo_home}/tmp
@@ -171,6 +171,12 @@ function select_linux()
                     zip=Jx
                     upgrade="apt update "
 					;;
+                centos)
+                    aarch64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7-aarch64/docker/centos-7arm64-docker.tar.xz
+                    arm=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7armhfp/docker/centos-7armhfp-docker.tar.xz
+                    zip=Jx
+                    upgrade="yum makecache "
+                    ;;
 				*)
 					error "[ Unsupported release $1 ]"
 					;;
