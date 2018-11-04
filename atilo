@@ -166,9 +166,9 @@ function select_linux()
 					upgrade="apt update "
                     ;;
 				kali)
-                    aarch64=https://build.nethunter.com/kalifs/kalifs-20170903/kalifs-arm64-minimal.tar.xz
-                    arm=https://build.nethunter.com/kalifs/kalifs-latest/kalifs-armhf-minimal.tar.xz
-                    zip=Jx
+                    aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/arm64/kali-rootfs-arm64.tar.gz
+                    arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/armhf/kali-rootfs-armhf.tar.gz
+                    zip=xz
                     upgrade="apt update "
 					;;
                 centos)
