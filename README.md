@@ -5,7 +5,7 @@ A bash script to install linux on termux
 ## Installation
 **Please go to the release page to check the latest version**
 ``` bash
-VERSION=1.2
+VERSION=1.3
 pkg in curl
 curl -LO https://github.com/YadominJinta/atilo/releases/download/$VERSION/atilo.deb
 dpkg -i atilo.deb
@@ -17,7 +17,7 @@ apt install -f
 atilo [command] [Arguments]
 Atilo is a bash script to help you install some GNU/Linux distributions on Termux.
 
-命令/Commands:
+Commands:
 list             list available distributions
    --installed   list installed distributions
 remove           remove installed distributions
@@ -35,6 +35,7 @@ The followings are available
 
 alpine
 arch
+centos
 debian
 fedora
 kali
@@ -48,7 +49,7 @@ Installed
 
 alpine
 ```
-
+**Notice**: Fedora 29 doesn't provode an image for arm,so you have to run `dnf update --releasever=29` to update to 29.
 ## GUI
 
 [Using GUI on termux](https://yadominjinta.github.io/2018/08/18/GUI-on-termux-EN.html)

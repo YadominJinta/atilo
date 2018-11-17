@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-version="1.2.1 EN"
+version="1.3 EN"
 writer="@YadominJinta @seashell11234455"
 support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos")
 support_arch=("arm" "aarch64")
