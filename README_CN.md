@@ -2,13 +2,9 @@
 在Termux安装Linux的bash脚本
 
 ## 安装
-**请前往Release页面查看最新的release**
 ``` bash
-VERSION=1.3
-pkg in curl
-curl -LO https://github.com/YadominJinta/atilo/releases/download/$VERSION/atilo-cn.deb
-dpkg -i atilo-cn.deb
-apt install -f
+echo "deb [trusted=yes] https://yadominjinta.github.io/files/ termux    extras" >> $PREFIX/etc/apt/sources.list
+pkg in atilo-cn
 ```
 
 ## 使用方法
