@@ -131,7 +131,7 @@ function select_linux()
 
 			case "$1" in
 				fedora)
-					aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Minimal-Base-29-1.2.aarch64.tar.xz
+                    aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
 					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
 					upgrade="dnf makecache"
 					;;
