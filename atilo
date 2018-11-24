@@ -2,7 +2,7 @@
 
 version="1.3 EN"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos")
+support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos" "parrot")
 support_arch=("arm" "aarch64")
 atilo_home=$HOME/.atilo
 atilo_tmp=${atilo_home}/tmp
@@ -177,6 +177,12 @@ function select_linux()
                     zip=Jx
                     upgrade="yum makecache "
                     ;;
+                parrot)
+                	aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/arm64/parrot-rootfs-arm64.tar.gz
+                	arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/armhf/parrot-rootfs-armhf.tar.gz
+                	zip=xz
+                	upgrade="apt update"
+                	;;
 				*)
 					error "[ Unsupported release $1 ]"
 					;;
