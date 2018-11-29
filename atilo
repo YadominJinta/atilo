@@ -181,10 +181,8 @@ function select_linux()
                     upgrade="apt update"
                     ;;
                 opensuse)
-                    if [ ${architecture} != "aarch64" ]; then
-                        error "[ openSUSE supports only aarch64 ]"
-                    fi
-                    aarch64=http://download.opensuse.org/repositories/devel:/ARM:/Factory:/Contrib:/HEAD/images/openSUSE-Tumbleweed-ARM-JeOS.aarch64-rootfs.aarch64.tar.xz
+                    aarch64=http://download.opensuse.org/ports/aarch64/distribution/leap/15.0/appliances/openSUSE-Leap15.0-ARM-JeOS.aarch64-rootfs.aarch64-2018.07.02-Buildlp150.1.1.tar.xz
+                    arm=http://download.opensuse.org/ports/armv7hl/distribution/leap/15.0/appliances/openSUSE-Leap15.0-ARM-JeOS.armv7-rootfs.armv7l-2018.07.02-Buildlp150.1.1.tar.xz
                     zip=xz
                     upgrade="zypper up "
                     ;;
