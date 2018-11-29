@@ -238,8 +238,7 @@ nameserver 8.8.4.4" >> ${root}/etc/resolv.conf 2>/dev/null
         echo -e "${mirrors}" > ${mirrorspath}
     fi
 
-    echo '
-#!/data/data/com.termux/files/usr/bin/bash
+    cat > ${PREFIX}/bin/start${release_name} <<- EOM
 cd \$HOME/.atilo/
 unset LD_PRELOAD
 command="proot"
@@ -265,7 +264,8 @@ if [ -z "\$1" ];then
     exec \$command
 else
     \$command -c "\$com"
-fi' > ${PREFIX}/bin/start${release_name}
+fi
+EOM
 
     chmod +x $PREFIX/bin/start${release_name}
 
@@ -305,7 +305,7 @@ function main()
             if [[ $2 == "--installed" ]]; then
                 local_linux
             else
-                list_linux 
+                list_linux
             fi
             ;;
         help)
@@ -321,7 +321,6 @@ function main()
         *)
             error "[ Unknown operation ]"
             ;;
-        
     esac
 }
 
