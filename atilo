@@ -1,61 +1,60 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-version="1.3 EN"
+version="1.4 EN"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos" "parrot")
+support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos" "parrot" "opensuse")
 support_arch=("arm" "aarch64")
 atilo_home=$HOME/.atilo
 atilo_tmp=${atilo_home}/tmp
 
 # Create Dir
 if [ ! -d ${atilo_home} ]; then
-	mkdir -p ${atilo_home}
+    mkdir -p ${atilo_home}
 fi
 if [ ! -d ${atilo_tmp} ]; then
-	mkdir -p ${atilo_tmp}
+    mkdir -p ${atilo_tmp}
 fi
 function tips()
 {
-	echo -e "\033[32m$@\033[0m"
+    echo -e "\033[32m$@\033[0m"
 }
 
 function error()
 {
-	echo -e "\033[1;31m$@\033[0m" 1>&2
-	exit 1
+    echo -e "\033[1;31m$@\033[0m" 1>&2
+    exit 1
 }
 
 function check_for_req()
 {
-	tips "[ Checking for requirements ... ]"
-	requirements=""
+    tips "[ Checking for requirements ... ]"
+    requirements=""
 
-	if [ ! -e $PREFIX/bin/tar ]; then
-		requirements="${requirements} tar"
-	fi
+    if [ ! -e $PREFIX/bin/tar ]; then
+        requirements="${requirements} tar"
+    fi
 
-	if [ ! -e $PREFIX/bin/proot ]; then
-		requirements="${requirements} proot"
-	fi
+    if [ ! -e $PREFIX/bin/proot ]; then
+        requirements="${requirements} proot"
+    fi
 
-	if [ ! -e $PREFIX/bin/pv ]; then
-		requirements="${requirements} pv"
-	fi
+    if [ ! -e $PREFIX/bin/pv ]; then
+        requirements="${requirements} pv"
+    fi
 
-	if [ ! -e $PREFIX/bin/curl ]; then
-		requirements="${requirements} curl"
-	fi
+    if [ ! -e $PREFIX/bin/wget ]; then
+        requirements="${requirements} wget"
+    fi
 
-	if [ ! -e $PREFIX/bin/grep ]; then
-		requirements="${requirements} grep"
-	fi
+    if [ ! -e $PREFIX/bin/grep ]; then
+        requirements="${requirements} grep"
+    fi
 
-
-	if [ ! -z "$requirements" ]; then
-		tips "[ Installing requirements ... ]"
+    if [ ! -z "$requirements" ]; then
+        tips "[ Installing requirements ... ]"
         apt update
-		apt install ${requirements} -y
-	fi
+        apt install ${requirements} -y
+    fi
 }
 
 function check_for_arch()
@@ -65,15 +64,14 @@ function check_for_arch()
     if [ ${architecture} == "aarch64" ]
     then
         time_arch="arm64"
-        
     elif [[ ${architecture} =~ .*(arm).* ]]
     then
         time_arch="armhf"
     else
-        error "[ Unknown architecture ${architecture}]"
-	fi
-
+        error "[ Unsupported architecture ${architecture}]"
+    fi
 }
+
 function show_usage()
 {
     tips "Atilo \t ${version}"
@@ -86,13 +84,13 @@ function show_usage()
     tips "install\t\t install distributions"
     tips "clean\t\t delete tmps"
     tips "help\t\t Show this help"
-	tips "Writen by ${writer} "
-	tips "This atilo has super cow power"
+    tips "Writen by ${writer} "
+    tips "This atilo has super cow power"
 }
 
 function list_linux()
 {
-	tips "The followings are available"
+    tips "The followings are available"
     for i in ${support_linux[@]}
     do
         tips $i
@@ -109,68 +107,67 @@ function local_linux()
             tips $i
         fi
     done
-
 }
+
 function remove_linux()
 {
-	cd ${atilo_home}
-	if [ -d ${release_name} ]; then
-		chmod -R 0755 ./${release_name}
-		rm -rf ./${release_name}
-		rm -f $PREFIX/bin/start${release_name}
-		tips "[ Successfully delete ${release_name} ]"
-		exit 0
-	else
-		error "[ Unable to locate ${release_name} ]"
-	fi
+    cd ${atilo_home}
+    if [ -d ${release_name} ]; then
+        chmod -R 0755 ./${release_name}
+        rm -rf ./${release_name}
+        rm -f $PREFIX/bin/start${release_name}
+        tips "[ Successfully delete ${release_name} ]"
+        exit 0
+    else
+        error "[ Unable to locate ${release_name} ]"
+    fi
 }
 
 function select_linux()
 {
-
-			case "$1" in
-				fedora)
+            case "$1" in
+                fedora)
                     aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
-					arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
-					upgrade="dnf makecache"
-					;;
-				debian)
+                    arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+                    upgrade="dnf makecache"
+                    ;;
+                debian)
                     aarch64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm64v8/stretch/slim/rootfs.tar.xz 
                     arm=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm32v7/stretch/slim/rootfs.tar.xz 
-					zip=Jx
-					upgrade="apt update && apt upgrade"
-					;;
-				alpine)
+                    zip=Jx
+                    upgrade="apt update && apt upgrade"
+                    ;;
+                alpine)
                     aarch64=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz
                     arm=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
                     zip=pzx
-					sh=ash
-					upgrade="apk update && apk upgrade"
-					;;
-				arch)
-                    aarch64=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
-                    arm=http://fl.us.mirror.archlinuxarm.org/os/ArchLinuxARM-armv7-latest.tar.gz
-					zip=pzx
-					upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
-					;;
-				ubuntults)
-					aarch64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-arm64-root.tar.gz
-                    arm=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-armhf-root.tar.gz
-					zip=zx
-					upgrade="apt update "
-					;;
-                ubuntu)
-					aarch64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-arm64-root.tar.gz 
-                    arm=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-armhf-root.tar.gz 
-					zip=zx
-					upgrade="apt update "
+                    sh=ash
+                    upgrade="apk update && apk upgrade"
                     ;;
-				kali)
+                arch)
+                    aarch64=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
+                    arm=http://os.archlinuxarm.org/os/ArchLinuxARM-armv7-latest.tar.gz
+                    zip=pzx
+                    upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Syu "
+                    ;;
+                ubuntults)
+                    aarch64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-arm64-root.tar.gz
+                    arm=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-armhf-root.tar.gz
+                    zip=zx
+                    upgrade="apt update "
+                    ;;
+                ubuntu)
+                    aarch64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-arm64-root.tar.gz 
+                    arm=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-armhf-root.tar.gz 
+                    zip=zx
+                    upgrade="apt update "
+                    ;;
+                kali)
                     aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/arm64/kali-rootfs-arm64.tar.gz
                     arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/armhf/kali-rootfs-armhf.tar.gz
                     zip=xz
                     upgrade="apt update "
-					;;
+                    ;;
                 centos)
                     aarch64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7-aarch64/docker/centos-7arm64-docker.tar.xz
                     arm=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7armhfp/docker/centos-7armhfp-docker.tar.xz
@@ -178,15 +175,23 @@ function select_linux()
                     upgrade="yum makecache "
                     ;;
                 parrot)
-                	aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/arm64/parrot-rootfs-arm64.tar.gz
-                	arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/armhf/parrot-rootfs-armhf.tar.gz
-                	zip=xz
-                	upgrade="apt update"
-                	;;
-				*)
-					error "[ Unsupported release $1 ]"
-					;;
-			esac
+                    aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/arm64/parrot-rootfs-arm64.tar.gz
+                    arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/armhf/parrot-rootfs-armhf.tar.gz
+                    zip=xz
+                    upgrade="apt update"
+                    ;;
+                opensuse)
+                    if [ ${architecture} != "aarch64" ]; then
+                        error "[ openSUSE supports only aarch64 ]"
+                    fi
+                    aarch64=http://download.opensuse.org/repositories/devel:/ARM:/Factory:/Contrib:/HEAD/images/openSUSE-Tumbleweed-ARM-JeOS.aarch64-rootfs.aarch64.tar.xz
+                    zip=xz
+                    upgrade="zypper up "
+                    ;;
+                *)
+                    error "[ Unsupported release $1 ]"
+                    ;;
+            esac
 
 }
 function clean_tmp()
@@ -196,41 +201,44 @@ function clean_tmp()
 }
 function install_linux()
 {
-	cd $atilo_tmp
-	root=$atilo_home/$release_name
-	if [ ! -d ${root} ]; then
-		mkdir ${root}
-	fi
+    cd $atilo_tmp
+    root=$atilo_home/$release_name
+    if [ ! -d ${root} ]; then
+        mkdir ${root}
+    fi
 
-	tips "[ Downloading ... ]"
-	if [ -f ${release_name} ]; then
-		tips "[ Skip download ]"
-	else
-		ls -A | xargs rm -rf 
-		curl "${url}" -o ${release_name} --progress
-	fi
+    tips "[ Downloading ... ]"
+    if [ -f ${release_name} ]; then
+        tips "[ Skip download ]"
+    else
+        ls -A | xargs rm -rf 
+        wget "${url}" -O ${release_name} --quiet --show-progress
+    fi
 
-	tips "[ Extracting ... ]"
-	if [ "${release_name}" == "fedora" ]; then
-		tar xf fedora --strip-components=1 --exclude json --exclude VERSION
-		pv layer.tar|proot --link2symlink tar xpC ${root} 2>/dev/null
-		rm -f layer.tar
-		chmod +w ${root}
-	else
-		pv ${release_name} |proot --link2symlink tar ${zip}C ${root} 2>/dev/null
-	fi
+    tips "[ Extracting ... ]"
+    if [ "${release_name}" == "fedora" ]; then
+        tar xf fedora --strip-components=1 --exclude json --exclude VERSION
+        pv layer.tar|proot --link2symlink tar xpC ${root} 2>/dev/null
+        rm -f layer.tar
+        chmod +w ${root}
+    else
+        pv ${release_name} |proot --link2symlink tar ${zip}C ${root} 2>/dev/null
+    fi
 
-	tips "[ Configuring ...]"
-	rm -r ${root}/etc/resolv.conf 2>/dev/null
-	echo "nameserver 8.8.8.8" >> ${root}/etc/resolv.conf
-	echo "export USER=root" >> ${root}/etc/profile
+    tips "[ Configuring ...]"
+    rm -r ${root}/etc/resolv.conf 2>/dev/null
+    echo "nameserver 1.1.1.1
+nameserver 1.0.0.1
+nameserver 8.8.8.8
+nameserver 8.8.4.4" >> ${root}/etc/resolv.conf 2>/dev/null
+    echo "export USER=root" >> ${root}/etc/profile 2>/dev/null
 
-	if [ ! -z "${mirrors}" ]; then
-		cd ${root}
-		echo -e "${mirrors}" > ${mirrorspath}
-	fi
+    if [ ! -z "${mirrors}" ]; then
+        cd ${root}
+        echo -e "${mirrors}" > ${mirrorspath}
+    fi
 
-	cat > ${PREFIX}/bin/start${release_name} <<- EOM
+    echo '
 #!/data/data/com.termux/files/usr/bin/bash
 cd \$HOME/.atilo/
 unset LD_PRELOAD
@@ -257,64 +265,64 @@ if [ -z "\$1" ];then
     exec \$command
 else
     \$command -c "\$com"
-fi
-	EOM
-	chmod +x $PREFIX/bin/start${release_name}
+fi' > ${PREFIX}/bin/start${release_name}
 
-	tips "[ Upgrading ... ]"
-	start${release_name} ${upgrade}
+    chmod +x $PREFIX/bin/start${release_name}
 
-	tips "[ All done ]"
+    tips "[ Upgrading ... ]"
+    start${release_name} ${upgrade}
+
+    tips "[ All done ]"
     tips "start${release_name} To start"
 }
 
 function main()
 {
-	release_name=$2
-	case "$1" in
-		install|in)
-			check_for_arch
-			check_for_req
-			cd ${atilo_home}
-			sh=bash
-			select_linux ${release_name}	
-			case ${time_arch} in
-				arm64)
-					url=${aarch64}
-				;;
-				armhf)
-					url=${arm}
-				;;
-			esac
-			select_linux ${release_name}	
-			install_linux
-			;;
+    release_name=$2
+    case "$1" in
+        install|in)
+            check_for_arch
+            check_for_req
+            cd ${atilo_home}
+            sh=bash
+            select_linux ${release_name}
+            case ${time_arch} in
+                arm64)
+                    url=${aarch64}
+                ;;
+                armhf)
+                    url=${arm}
+                ;;
+            esac
+            select_linux ${release_name}
+            install_linux
+            ;;
 
-		remove|rm)
-			remove_linux
-			;;
-		list|ls)
+        remove|rm)
+            remove_linux
+            ;;
+        list|ls)
             if [[ $2 == "--installed" ]]; then
                 local_linux
             else
-			    list_linux 
+                list_linux 
             fi
-			;;
-		help)
-		show_usage
-			;;
+            ;;
+        help)
+        show_usage
+            ;;
         clean)
             clean_tmp
             ;;
-		"")
-		show_usage
-		error "[ A command is needed ]"
-		;;
-		*)
-			error "[ Unkown operation ]"
-			;;
-		
-	esac
+        "")
+        show_usage
+        error "[ A command is needed ]"
+        ;;
+        *)
+            error "[ Unknown operation ]"
+            ;;
+        
+    esac
 }
 
 main "$@"
