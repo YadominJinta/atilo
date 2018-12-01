@@ -210,7 +210,7 @@ function install_linux()
         tips "[ Skip download ]"
     else
         ls -A | xargs rm -rf 
-        curl "${url}" -O ${release_name} --progress
+        curl "${url}" -o ${release_name} --progress
     fi
 
     tips "[ Extracting ... ]"
