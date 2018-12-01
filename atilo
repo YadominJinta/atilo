@@ -43,8 +43,8 @@ function check_for_req()
         requirements="${requirements} pv"
     fi
 
-    if [ ! -e $PREFIX/bin/wget ]; then
-        requirements="${requirements} wget"
+    if [ ! -e $PREFIX/bin/curl ]; then
+        requirements="${requirements} curl"
     fi
 
     if [ ! -e $PREFIX/bin/grep ]; then
@@ -210,7 +210,7 @@ function install_linux()
         tips "[ Skip download ]"
     else
         ls -A | xargs rm -rf 
-        wget "${url}" -O ${release_name} --quiet --show-progress
+        curl "${url}" -O ${release_name} --progress
     fi
 
     tips "[ Extracting ... ]"
