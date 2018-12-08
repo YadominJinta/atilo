@@ -1,6 +1,6 @@
 #!/data/data/com.termux/files/usr/bin/bash
 
-version="1.4 EN"
+version="1.3.1 EN"
 writer="@YadominJinta @seashell11234455"
 support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos" "parrot")
 support_arch=("arm" "aarch64")
@@ -67,6 +67,12 @@ function check_for_arch()
     elif [[ ${architecture} =~ .*(arm).* ]]
     then
         time_arch="armhf"
+    elif [[ ${architecture} = "i686" ]]
+    then
+        time_arch="i686"
+    elif [[ ${architecture} = "x86_64" ]]
+    then
+        time_arch="x86_64"
     else
         error "[ Unsupported architecture ${architecture}]"
     fi
@@ -129,17 +135,26 @@ function select_linux()
                 fedora)
                     aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
                     arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+                    x86_64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
+                    if [[ ${time_arch} = "i686" ]]
+                    then 
+                        error "Fedora doesn't provide x86_64 image."
+                    fi
                     upgrade="dnf makecache"
                     ;;
                 debian)
                     aarch64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm64v8/stretch/slim/rootfs.tar.xz 
                     arm=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm32v7/stretch/slim/rootfs.tar.xz 
+                    x86_64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-i386/stretch/rootfs.tar.xz
+                    i686=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-amd64/stretch/rootfs.tar.xz
                     zip=Jx
                     upgrade="apt update && apt upgrade"
                     ;;
                 alpine)
-                    aarch64=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz
-                    arm=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
+                    aarch64=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/alpine-minirootfs-3.8.1-aarch64.tar.gz
+                    arm=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/alpine-minirootfs-3.8.1-armhf.tar.gz
+                    x86_64=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-minirootfs-3.8.1-x86_64.tar.gz
+                    i686=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86/alpine-minirootfs-3.8.1-x86.tar.gz
                     zip=pzx
                     sh=ash
                     upgrade="apk update && apk upgrade"
@@ -147,30 +162,42 @@ function select_linux()
                 arch)
                     aarch64=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
                     arm=http://os.archlinuxarm.org/os/ArchLinuxARM-armv7-latest.tar.gz
+                    if [[ ${time_arch} = "i686" || ${time_arch} = "x86_64" ]]
+                    then
+                        error "Arch doesn't provide a x86 support"
+                    fi
                     zip=pzx
                     upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Sy"
                     ;;
                 ubuntults)
                     aarch64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-arm64-root.tar.gz
                     arm=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-armhf-root.tar.gz
+                    i686=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-i386-root.tar.gz
+                    x86_64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz
                     zip=zx
                     upgrade="apt update"
                     ;;
                 ubuntu)
                     aarch64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-arm64-root.tar.gz 
                     arm=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-armhf-root.tar.gz 
+                    i686=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-i386-root.tar.gz
+                    x86_64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-amd64-root.tar.gz
                     zip=zx
                     upgrade="apt update"
                     ;;
                 kali)
                     aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/arm64/kali-rootfs-arm64.tar.gz
                     arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/armhf/kali-rootfs-armhf.tar.gz
+                    x86_64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/amd64/kali-rootfs-amd64.tar.gz
+                    i686=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/i386/kali-rootfs-i386.tar.gz
                     zip=xz
                     upgrade="apt update"
                     ;;
                 centos)
                     aarch64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7-aarch64/docker/centos-7arm64-docker.tar.xz
                     arm=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7armhfp/docker/centos-7armhfp-docker.tar.xz
+                    i686=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7i386/docker/centos-7i386-docker.tar.xz
+                    x86_64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7/docker/centos-7-docker.tar.xz
                     zip=Jx
                     upgrade="yum makecache"
                     ;;
