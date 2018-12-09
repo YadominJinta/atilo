@@ -215,6 +215,7 @@ function select_linux()
                     if [[ ${time_arch} = "i686" || ${time_arch} = "x86_64" ]]
                     then
                         error "OpenSuSE doesn't provide x86 image."
+		fi
                     zip=xz
                     upgrade="zypper up"
                     ;;
