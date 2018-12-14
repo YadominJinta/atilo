@@ -163,7 +163,7 @@ function select_linux()
 					mirrorspath="etc/pacman.d/mirrorlist"
 					upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
 					;;
-				ubuntuilts)
+				ubuntults)
 					curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
 					ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 					rm tmp.html
