@@ -132,7 +132,12 @@ function select_linux()
 			case "$1" in
 				fedora)
                     aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
-					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
+					x86_64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
+					 if [[ ${time_arch} = "i686" ]]
+                    then 
+                        error "Fedora 不支持x86架构"
+                    fi
 					upgrade="dnf makecache"
 					;;
 				debian)
@@ -141,6 +146,8 @@ function select_linux()
 	rm tmp.html
 					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
 					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+					x86_64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/amd64/default/${ttime}rootfs.tar.xz
+					i686=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz
 					zip=pJx
 					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
 					mirrorspath="etc/apt/sources.list"
@@ -149,6 +156,8 @@ function select_linux()
 				alpine)
                     aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz 
 					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
+					x86_64=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.8/releases/x86_64/alpine-minirootfs-3.8.2-x86_64.tar.gz
+					i686=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.8/releases/x86/alpine-minirootfs-3.8.2-x86.tar.gz
                     zip=pzx
 					sh=ash
 					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/community"
