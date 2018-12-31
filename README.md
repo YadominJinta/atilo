@@ -25,26 +25,18 @@ This atilo has super cow power
 ```
 
 ## Support Linux
-``` bash
-./atilo list
-The followings are available
+| Distribution | aarch64 | arm | x86_64 | i686 |
+| ------------ | :-----: |:-: | :-----: | :--: |
+|Arch          |√        |√   |×        |×     |
+|CentOS|√|√|√|√|
+|Debian|√|√|√|√|
+|Fedora|√|√|√|×|
+|Kali|√|√|√|√|
+|OpenSuSE|√|√|×|×|
+|ParrotOS|√|√|√|√|
+|Ubuntu|√|√|√|√|
+|Ubuntu LTS|√|√|√|√|
 
-alpine
-arch
-centos
-debian
-fedora
-kali
-ubuntu
-# Ubuntu Cosmic
-ubuntults
-# Ubuntu Bionic LTS
-
-./atilo list --installed
-Installed 
-
-alpine
-```
 **Notice**: Fedora 29 doesn't provode an image for arm,so you have to run `dnf update --releasever=29` to update to 29.
 ## GUI
 

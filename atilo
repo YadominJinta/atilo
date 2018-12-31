@@ -138,7 +138,7 @@ function select_linux()
             case "$1" in
                 fedora)
                     aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
-                    arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+                    arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
                     amd64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
                     if [[ ${time_arch} = "i386" ]]
                     then 
