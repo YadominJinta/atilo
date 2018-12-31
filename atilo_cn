@@ -1,4 +1,4 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/bin/env bash
 
 version="1.3 CN"
 writer="@YadominJinta @seashell11234455"
