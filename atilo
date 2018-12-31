@@ -138,7 +138,7 @@ function select_linux()
                     x86_64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
                     if [[ ${time_arch} = "i686" ]]
                     then 
-                        error "Fedora doesn't provide x86_64 image."
+                        error "Fedora doesn't provide x86 image."
                     fi
                     upgrade="dnf makecache"
                     ;;
