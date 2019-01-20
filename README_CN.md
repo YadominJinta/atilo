@@ -48,4 +48,6 @@ Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 1.仅有有国内镜像的发行版才会加到CN版中  
 2.CN版的Kali是用Debian升级得到的
 
+## AnLinux
 
+你也可以使用[Anlinux](https://raw.githubusercontent.com/EXALAB/AnLinux-App/master/AnLinux/app/release/app-release.apk)来简化操作。Anlinux基于Termux，可以让图形界面的安装更方便！
