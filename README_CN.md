@@ -22,27 +22,20 @@ help             帮助
 ```
 
 ## 支持的发行版
-``` bash
-./atilo list
-以下为可用的Linux发行版
-alpine
-arch
-debian
-fedora
-kali
-ubuntu
-# Ubuntu 18.10
-ubuntults
-# Ubuntu 18.04 LTS
 
-./atilo list --installed
-已安装
+| 发行版 | aarch64 | arm | x86_64 | i686 |
+| ------------ | :-----: |:-: | :-----: | :--: |
+|Arch          |√        |√   |×        |×     |
+|Debian|√|√|√|√|
+|Fedora|√|√|√|×|
+|Kali|√|√|√|√|
+|Ubuntu|√|√|√|√|
+|Ubuntu LTS|√|√|√|√|
 
-alpine
-```
-**备注**:  
-1.CentOS仅支持EN版本，CN无(因为没有镜像)  
-2.Fedora 29没有提供arm架构的镜像，请运行`dnf update --releasever=29`来升级。  
+
+
+**备注**:    
+1.Fedora 29没有提供arm架构的镜像，请运行`dnf update --releasever=29`来升级。  
 ## 图形
 [在termux上开启图形化](https://yadominjinta.github.io/2018/07/30/GUI-on-termux.html)
 
@@ -55,4 +48,6 @@ Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 1.仅有有国内镜像的发行版才会加到CN版中  
 2.CN版的Kali是用Debian升级得到的
 
+## AnLinux
 
+你也可以使用[Anlinux](https://raw.githubusercontent.com/EXALAB/AnLinux-App/master/AnLinux/app/release/app-release.apk)来简化操作。Anlinux基于Termux，可以让图形界面的安装更方便！

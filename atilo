@@ -1,8 +1,12 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/bin/env bash
 
-version="1.3.1 EN"
+# Copyright 2017-2019 by YadominJinta. All rights reserved.
+# https://github.com/YadominJinta/atilo has info about the project.
+# https://github.com/YadominJinta/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
+
+version="1.4 EN"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" "centos" "parrot")
+support_linux=("alpine" "arch" "centos" "debian" "fedora" "kali" "opensuse" "parrot" "ubuntu" "ubuntults" )
 support_arch=("arm" "aarch64")
 atilo_home=$HOME/.atilo
 atilo_tmp=${atilo_home}/tmp
@@ -69,10 +73,10 @@ function check_for_arch()
         time_arch="armhf"
     elif [[ ${architecture} = "i686" ]]
     then
-        time_arch="i686"
+        time_arch="i386"
     elif [[ ${architecture} = "x86_64" ]]
     then
-        time_arch="x86_64"
+        time_arch="amd64"
     else
         error "[ Unsupported architecture ${architecture}]"
     fi
@@ -134,27 +138,27 @@ function select_linux()
             case "$1" in
                 fedora)
                     aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
-                    arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
-                    x86_64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
-                    if [[ ${time_arch} = "i686" ]]
+                    arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
+                    amd64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
+                    if [[ ${time_arch} = "i386" ]]
                     then 
-                        error "Fedora doesn't provide x86_64 image."
+                        error "Fedora doesn't provide x86 image."
                     fi
                     upgrade="dnf makecache"
                     ;;
                 debian)
                     aarch64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm64v8/stretch/slim/rootfs.tar.xz 
                     arm=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm32v7/stretch/slim/rootfs.tar.xz 
-                    x86_64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-i386/stretch/rootfs.tar.xz
-                    i686=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-amd64/stretch/rootfs.tar.xz
+                    amd64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-i386/stretch/rootfs.tar.xz
+                    i386=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-amd64/stretch/rootfs.tar.xz
                     zip=Jx
                     upgrade="apt update && apt upgrade"
                     ;;
                 alpine)
-                    aarch64=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/aarch64/alpine-minirootfs-3.8.1-aarch64.tar.gz
-                    arm=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/armhf/alpine-minirootfs-3.8.1-armhf.tar.gz
-                    x86_64=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86_64/alpine-minirootfs-3.8.1-x86_64.tar.gz
-                    i686=http://dl-cdn.alpinelinux.org/alpine/latest-stable/releases/x86/alpine-minirootfs-3.8.1-x86.tar.gz
+                    aarch64=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz
+                    arm=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.0-armhf.tar.gz
+                    amd64=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
+                    i386=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86/alpine-minirootfs-3.9.0-x86.tar.gz
                     zip=pzx
                     sh=ash
                     upgrade="apk update && apk upgrade"
@@ -162,7 +166,7 @@ function select_linux()
                 arch)
                     aarch64=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
                     arm=http://os.archlinuxarm.org/os/ArchLinuxARM-armv7-latest.tar.gz
-                    if [[ ${time_arch} = "i686" || ${time_arch} = "x86_64" ]]
+                    if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
                     then
                         error "Arch doesn't provide a x86 support"
                     fi
@@ -172,47 +176,47 @@ function select_linux()
                 ubuntults)
                     aarch64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-arm64-root.tar.gz
                     arm=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-armhf-root.tar.gz
-                    i686=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-i386-root.tar.gz
-                    x86_64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz
+                    i386=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-i386-root.tar.gz
+                    amd64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz
                     zip=zx
                     upgrade="apt update"
                     ;;
                 ubuntu)
                     aarch64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-arm64-root.tar.gz 
                     arm=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-armhf-root.tar.gz 
-                    i686=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-i386-root.tar.gz
-                    x86_64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-amd64-root.tar.gz
+                    i386=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-i386-root.tar.gz
+                    amd64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-amd64-root.tar.gz
                     zip=zx
                     upgrade="apt update"
                     ;;
                 kali)
                     aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/arm64/kali-rootfs-arm64.tar.gz
                     arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/armhf/kali-rootfs-armhf.tar.gz
-                    x86_64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/amd64/kali-rootfs-amd64.tar.gz
-                    i686=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/i386/kali-rootfs-i386.tar.gz
+                    amd64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/amd64/kali-rootfs-amd64.tar.gz
+                    i386=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/i386/kali-rootfs-i386.tar.gz
                     zip=xz
                     upgrade="apt update"
                     ;;
                 centos)
                     aarch64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7-aarch64/docker/centos-7arm64-docker.tar.xz
                     arm=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7armhfp/docker/centos-7armhfp-docker.tar.xz
-                    i686=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7i386/docker/centos-7i386-docker.tar.xz
-                    x86_64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7/docker/centos-7-docker.tar.xz
+                    i386=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7i386/docker/centos-7i386-docker.tar.xz
+                    amd64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7/docker/centos-7-docker.tar.xz
                     zip=Jx
                     upgrade="yum makecache"
                     ;;
                 parrot)
                     aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/arm64/parrot-rootfs-arm64.tar.gz
                     arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/armhf/parrot-rootfs-armhf.tar.gz
-                    i686=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/amd64/parrot-rootfs-amd64.tar.gz
-                    x86_64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/i386/parrot-rootfs-i386.tar.gz
+                    i386=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/amd64/parrot-rootfs-amd64.tar.gz
+                    amd64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/i386/parrot-rootfs-i386.tar.gz
                     zip=xz
                     upgrade="apt update"
                     ;;
                 opensuse)
                     aarch64=http://download.opensuse.org/ports/aarch64/distribution/leap/15.0/appliances/openSUSE-Leap15.0-ARM-JeOS.aarch64-rootfs.aarch64-2018.07.02-Buildlp150.1.1.tar.xz
                     arm=http://download.opensuse.org/ports/armv7hl/distribution/leap/15.0/appliances/openSUSE-Leap15.0-ARM-JeOS.armv7-rootfs.armv7l-2018.07.02-Buildlp150.1.1.tar.xz
-                    if [[ ${time_arch} = "i686" || ${time_arch} = "x86_64" ]]
+                    if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
                     then
                         error "OpenSuSE doesn't provide x86 image."
 		fi
@@ -287,7 +291,8 @@ command+=" -b /proc/"
 command+=" -w /root"
 command+=" /usr/bin/env -i"
 command+=" HOME=/root"
-command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin"
+command+=" LANG=C.UTF-8"
+command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 command+=" TERM=\${TERM}"
 command+=" /bin/${sh} --login"
 export PROOT_NO_SECCOMP=1
@@ -325,11 +330,11 @@ function main()
                 armhf)
                     url=${arm}
                 ;;
-                i686)
-                    url=${i686}
+                i386)
+                    url=${i386}
                 ;;
-                x86_64)
-                    url=${x86_64}
+                amd64)
+                    url=${amd64}
                 ;;
             esac
             select_linux ${release_name}

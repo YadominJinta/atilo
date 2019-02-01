@@ -1,6 +1,10 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#!/bin/env bash
 
-version="1.3 CN"
+# Copyright 2017-2019 by YadominJinta. All rights reserved.
+# https://github.com/YadominJinta/atilo has info about the project.
+# https://github.com/YadominJinta/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
+
+version="1.4 CN"
 writer="@YadominJinta @seashell11234455"
 support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" )
 support_arch=("arm" "aarch64")
@@ -69,6 +73,12 @@ function check_for_arch()
     elif [[ ${architecture} =~ .*(arm).* ]]
     then
         time_arch="armhf"
+	elif [[ ${architecture} = "i686" ]]
+    then
+        time_arch="i386"
+    elif [[ ${architecture} = "x86_64" ]]
+    then
+        time_arch="amd64"
     else
         error "[ 未知的架构 ${architecture}]"
 	fi
@@ -132,7 +142,12 @@ function select_linux()
 			case "$1" in
 				fedora)
                     aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
-					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/28/Container/armhfp/images/Fedora-Container-Minimal-Base-28-1.1.armhfp.tar.xz
+					arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
+					amd64=https://mirror.tuna.tsinghua.edu.cn/fedora/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
+					 if [[ ${time_arch} = "i386" ]]
+                    then 
+                        error "Fedora 不支持x86架构"
+                    fi
 					upgrade="dnf makecache"
 					;;
 				debian)
@@ -141,23 +156,31 @@ function select_linux()
 	rm tmp.html
 					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
 					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+					amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/amd64/default/${ttime}rootfs.tar.xz
+					i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz
 					zip=pJx
 					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
 					mirrorspath="etc/apt/sources.list"
 					upgrade="apt update && apt upgrade"
 					;;
 				alpine)
-                    aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz 
-					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/releases/armhf/alpine-minirootfs-3.8.0-armhf.tar.gz
+          aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz 
+					arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.0-armhf.tar.gz
+					amd64=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
+					i386=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86/alpine-minirootfs-3.9.0-x86.tar.gz
                     zip=pzx
 					sh=ash
-					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.8/community"
+					mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/community"
 					mirrorspath="etc/apk/repositories"
 					upgrade="apk update && apk upgrade"
 					;;
 				arch)
 					aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
 					arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
+					if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
+                    then
+                        error "Arch doesn't provide a x86 support"
+                    fi
 					zip=pzx
 					mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
 					mirrorspath="etc/pacman.d/mirrorlist"
@@ -169,6 +192,8 @@ function select_linux()
 					rm tmp.html
 					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
 					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
+					amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/amd64/default/${ttime}rootfs.tar.xz
+					i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/i386/default/${ttime}rootfs.tar.xz
 					zip=pJx
 					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
 					mirrorspath="etc/apt/sources.list"
@@ -180,6 +205,8 @@ function select_linux()
 					rm tmp.html
 					aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/arm64/default/${ttime}rootfs.tar.xz
 					arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/armhf/default/${ttime}rootfs.tar.xz
+					i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/i386/default/${ttime}rootfs.tar.xz
+					amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/amd64/default/${ttime}rootfs.tar.xz
 					zip=pJx
 					mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic-updates main restricted universe multiverse"
 					mirrorspath="etc/apt/sources.list"
@@ -278,7 +305,8 @@ command+=" -b /proc/"
 command+=" -w /root"
 command+=" /usr/bin/env -i"
 command+=" HOME=/root"
-command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin"
+command+=" LANG=C.UTF-8"
+command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
 command+=" TERM=\${TERM}"
 command+=" /bin/${sh} --login"
 export PROOT_NO_SECCOMP=1
@@ -315,6 +343,12 @@ function main()
 				armhf)
 					url=${arm}
 				;;
+				i386)
+                    url=${i386}
+                ;;
+                amd64)
+                    url=${amd64}
+                ;;
 			esac
 			select_linux ${release_name}	
 			install_linux
