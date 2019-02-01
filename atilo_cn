@@ -179,7 +179,7 @@ function select_linux()
 		arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
 		if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
                     then
-                        error "Arch doesn't provide a x86 support"
+                        error "Arch 不支持 x86 及 amd64 架构"
                 fi
 		zip=pzx
 		mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
