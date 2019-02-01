@@ -140,7 +140,7 @@ function select_linux()
 {
 
 		case "$1" in
-		fedora)
+	fedora)
                 aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
 		arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
 		amd64=https://mirror.tuna.tsinghua.edu.cn/fedora/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
@@ -150,7 +150,7 @@ function select_linux()
                  fi
 		upgrade="dnf makecache"
 		;;
-		debian)
+	debian)
 		curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
 		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
 	        rm tmp.html
@@ -163,7 +163,7 @@ function select_linux()
 		mirrorspath="etc/apt/sources.list"
 		upgrade="apt update && apt upgrade"
 		;;
-		alpine)
+	alpine)
                 aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz 
 		arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.0-armhf.tar.gz
 		amd64=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
@@ -174,7 +174,7 @@ function select_linux()
 		mirrorspath="etc/apk/repositories"
 		upgrade="apk update && apk upgrade"
 		;;
-		arch)
+	arch)
 		aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
 		arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
 		if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
@@ -186,7 +186,7 @@ function select_linux()
 		mirrorspath="etc/pacman.d/mirrorlist"
 		upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
 		;;
-		ubuntults)
+	ubuntults)
 		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
 		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 		rm tmp.html
@@ -199,7 +199,7 @@ function select_linux()
 		mirrorspath="etc/apt/sources.list"
 		upgrade="apt update "
 		;;
-                ubuntu)
+        ubuntu)
 		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
 		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 		rm tmp.html
@@ -212,11 +212,11 @@ function select_linux()
 	        mirrorspath="etc/apt/sources.list"
 		upgrade="apt update "
 		;;
-		kali)
+	kali)
 		select_linux "debian"
 		upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y && echo -e "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
 		;;
-		*)
+	*)
 		error "[ 不支持的发行版 $1 ]"
 		;;
 	        esac
@@ -307,7 +307,7 @@ command+=" /usr/bin/env -i"
 command+=" HOME=/root"
 command+=" LANG=C.UTF-8"
 command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
-command+=" TERM=\${TERM}"
+command+=" TERM=\${apTERM}"
 command+=" /bin/${sh} --login"
 export PROOT_NO_SECCOMP=1
 com="\$@"
@@ -337,44 +337,43 @@ function main()
 			sh=bash
 			select_linux ${release_name}	
 			case ${time_arch} in
-				arm64)
-				        url=${aarch64}
-				;;
-				armhf)
-					url=${arm}
-				;;
-				i386)
-                    url=${i386}
-                ;;
-                amd64)
-                    url=${amd64}
-                ;;
+			   arm64)
+			        url=${aarch64}
+			   ;;
+			   armhf)
+			        url=${arm}
+			   ;;
+			   i386)
+   				url=${i386}
+                           ;;
+                           amd64)
+                                 url=${amd64}
+                           ;;
 			esac
-			select_linux ${release_name}	
+	                select_linux ${release_name}	
 			install_linux
 			;;
-
-		remove|rm)
-			remove_linux
+	                remove|rm)
+			          remove_linux
 			;;
-		list|ls)
-            if [[ $2 == "--installed" ]]; then
-                local_linux
-            else
-			    list_linux 
-            fi
+		        list|ls)
+                                 if [[ $2 == "--installed" ]]; then
+                                    local_linux
+                                 else
+			            list_linux 
+                                 fi
 			;;
-		help)
-		show_usage
+		        help)
+		              show_usage
 			;;
-        clean)
-            clean_tmp
-            ;;
-		"")
-		show_usage
-		error "[ 请指定一个命令 ]"
-		;;
-		*)
+                        clean)
+                              clean_tmp
+                        ;;
+		      "")
+		        show_usage
+	                error "[ 请指定一个命令 ]"
+		      ;;
+		        *)
 			error "[ 未知的命令 ]"
 			;;
 		
