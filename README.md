@@ -1,7 +1,7 @@
 # Atilo
 A bash script to install linux on termux  
   
-中文用户[点击这里](https://github.com/YadominJinta/atilo/blob/master/README_CN.md)
+中文用户[点击这里](https://github.com/YadominJinta/atilo/blob/master/CN/README_CN.md)
 ## Installation
 ``` bash
 echo "deb [trusted=yes] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list
