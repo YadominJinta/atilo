@@ -48,6 +48,11 @@ Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 1.仅有有国内镜像的发行版才会加到CN版中  
 2.CN版的Kali是用Debian升级得到的
 
-## AnLinux
-
-你也可以使用[Anlinux](https://raw.githubusercontent.com/EXALAB/AnLinux-App/master/AnLinux/app/release/app-release.apk)来简化操作。Anlinux基于Termux，可以让图形界面的安装更方便！
+## 相关项目
+**[EXALAB/AnLinux-App](https://github.com/EXALAB/AnLinux-App)**: APP to help install Linux on termux.  
+**[sdrausty/TermuxArch](https://github.com/sdrausty/TermuxArch)**: Arch install script  
+**[Neo-Oli/termux-ubuntu](https://github.com/Neo-Oli/termux-ubuntu)**: Ubuntu chroot on termux  
+**[Hax4us/Nethunter-In-Termux](https://github.com/Hax4us/Nethunter-In-Termux)**: Install Kali nethunter (Kali Linux) in your termux application without rooted phone  
+**[nmilosev/termux-fedora](https://github.com/nmilosev/termux-fedora)**: A script to install a Fedora chroot into Termux  
+**[sp4rkie/debian-on-termux](https://github.com/sp4rkie/debian-on-termux)**: Install Debian 9 (stretch) on your Android smartphone
+**[Hax4us/TermuxAlpine](https://github.com/Hax4us/TermuxAlpine)**: Use TermuxAlpine.sh calling to install Alpine Linux in Termux on Android 
