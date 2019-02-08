@@ -84,6 +84,20 @@ function check_for_arch()
 	fi
 
 }
+
+function show_moo()
+{
+    tips '
+                 (__) 
+                 (oo) 
+           /------\/ 
+          / |    ||   
+         *  /\---/\ 
+            ~~   ~~   
+..."Have you mooed today?"...
+    ' 
+}
+
 function show_usage()
 {
     tips "Atilo \t ${version}"
