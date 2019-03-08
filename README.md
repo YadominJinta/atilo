@@ -38,6 +38,13 @@ This atilo has super cow power
 |Ubuntu LTS|√|√|√|√|
 
 **Notice**: Fedora 29 doesn't provode an image for arm,so you have to run `dnf update --releasever=29` to update to 29.
+
+**Notice for parrot**:If you want to add Tuna mirror for your parrot,please run
+
+```shell
+cat > /etc/apt/sources.list <<<"deb http://mirrors.tuna.tsinghua.edu.cn/parrot/ parrot main contrib non-free"
+```
+
 ## GUI
 
 [Using GUI on termux](https://yadominjinta.github.io/2018/08/18/GUI-on-termux-EN.html)
@@ -52,4 +59,5 @@ Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 **[Hax4us/Nethunter-In-Termux](https://github.com/Hax4us/Nethunter-In-Termux)**: Install Kali nethunter (Kali Linux) in your termux application without rooted phone  
 **[nmilosev/termux-fedora](https://github.com/nmilosev/termux-fedora)**: A script to install a Fedora chroot into Termux  
 **[sp4rkie/debian-on-termux](https://github.com/sp4rkie/debian-on-termux)**: Install Debian 9 (stretch) on your Android smartphone
+
 **[Hax4us/TermuxAlpine](https://github.com/Hax4us/TermuxAlpine)**: Use TermuxAlpine.sh calling to install Alpine Linux in Termux on Android  

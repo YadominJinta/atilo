@@ -254,7 +254,7 @@ function install_linux()
 		tips "[ 跳过下载 ]"
 	else
 		ls -A | xargs rm -rf 
-		curl "${url}" -o ${release_name} --progress
+		curl "${url}" -o ${release_name} --progress -C -
 	fi
 
 	tips "[ 解压中 ... ]"
@@ -321,7 +321,7 @@ command+=" /usr/bin/env -i"
 command+=" HOME=/root"
 command+=" LANG=C.UTF-8"
 command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
-command+=" TERM=\${apTERM}"
+command+=" TERM=xterm-256color"
 command+=" /bin/${sh} --login"
 export PROOT_NO_SECCOMP=1
 com="\$@"
