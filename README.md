@@ -28,13 +28,14 @@ This atilo has super cow power
 | Distribution | aarch64 | arm | x86_64 | i686 |
 | ------------ | :-----: |:-: | :-----: | :--: |
 |Arch          |√        |√   |×        |×     |
+|Alpine|√|√|√|√|
 |CentOS|√|√|√|√|
 |Debian|√|√|√|√|
 |Fedora|√|√|√|×|
 |Kali|√|√|√|√|
 |OpenSuSE|√|√|×|×|
 |ParrotOS|√|√|√|√|
-|Ubuntu|√|√|√|√|
+|Ubuntu Cosmic|√|√|√|√|
 |Ubuntu LTS|√|√|√|√|
 
 **Notice**: Fedora 29 doesn't provode an image for arm,so you have to run `dnf update --releasever=29` to update to 29.
