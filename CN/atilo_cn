@@ -57,8 +57,9 @@ function check_for_req()
 
 	if [ ! -z "$requirements" ]; then
 		tips "[ 正在安装依赖项 ]"
-        apt update
-		apt install ${requirements} -y
+		pkg install ${requirements} libcurl -y
+    else
+			pkg install libcurl -y
 	fi
 }
 
