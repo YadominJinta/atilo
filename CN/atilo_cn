@@ -117,7 +117,7 @@ function show_usage()
 
 function list_linux()
 {
-	tips "以下为可用的Linux"
+	tips "[ 以下为可用的Linux ]"
     for i in ${support_linux[@]}
     do
         tips $i
@@ -154,92 +154,90 @@ function remove_linux()
 function select_linux()
 {
 
-		case "$1" in
-	fedora)
-                aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
-		arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
-		amd64=https://mirror.tuna.tsinghua.edu.cn/fedora/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
-		 if [[ ${time_arch} = "i386" ]]
-                    then 
+	case "$1" in
+	     fedora)
+            aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
+		    arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
+		    amd64=https://mirror.tuna.tsinghua.edu.cn/fedora/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
+		    if [[ ${time_arch} = "i386" ]]; then 
                  error "Fedora 不支持x86架构"
-                 fi
-		upgrade="dnf makecache"
-		;;
-	debian)
-		curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
-		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
+            fi
+		    upgrade="dnf makecache"
+	    	;;
+	    debian)
+		    curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
+		    ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
 	        rm tmp.html
-		aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
-		arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
-		amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/amd64/default/${ttime}rootfs.tar.xz
-		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz
-		zip=pJx
+	    	aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
+	    	arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+	    	amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/amd64/default/${ttime}rootfs.tar.xz
+    		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz
+    		zip=pJx
 	        mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
-		mirrorspath="etc/apt/sources.list"
-		upgrade="apt update && apt upgrade"
-		;;
-	alpine)
-                aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz 
-		arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.0-armhf.tar.gz
-		amd64=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
-		i386=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86/alpine-minirootfs-3.9.0-x86.tar.gz
-                zip=pzx
-		sh=ash
-		mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/community"
-		mirrorspath="etc/apk/repositories"
-		upgrade="apk update && apk upgrade"
-		;;
-	arch)
-		aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
-		arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
-		if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
-                    then
-                        error "Arch 不支持 x86 及 amd64 架构"
-                fi
-		zip=pzx
-		mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
-		mirrorspath="etc/pacman.d/mirrorlist"
-		upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
-		;;
-	ubuntults)
-		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
-		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
+    		mirrorspath="etc/apt/sources.list"
+    		upgrade="apt update && apt upgrade"
+	    	;;
+	    alpine)
+            aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz 
+	    	arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.0-armhf.tar.gz
+    		amd64=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
+    		i386=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86/alpine-minirootfs-3.9.0-x86.tar.gz
+            zip=pzx
+    		sh=ash
+    		mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/community"
+    		mirrorspath="etc/apk/repositories"
+    		upgrade="apk update && apk upgrade"
+	    	;;
+    	arch)
+    		aarch64=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-aarch64-latest.tar.gz
+    		arm=https://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/os/ArchLinuxARM-armv7-latest.tar.gz
+    		if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]];then
+                 error "Arch 不支持 x86 及 amd64 架构"
+            fi
+	    	zip=pzx
+    		mirrors="Server = http://mirrors.tuna.tsinghua.edu.cn/archlinuxarm/\$arch/\$repo"
+    		mirrorspath="etc/pacman.d/mirrorlist"
+    		upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
+	    	;;
+    	ubuntults)
+    		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+    		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 		rm tmp.html
 	        aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
-		arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
-		amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/amd64/default/${ttime}rootfs.tar.xz
-		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/i386/default/${ttime}rootfs.tar.xz
-		zip=pJx
-		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
-		mirrorspath="etc/apt/sources.list"
-		upgrade="apt update "
-		;;
+    		arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/amd64/default/${ttime}rootfs.tar.xz
+    		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/i386/default/${ttime}rootfs.tar.xz
+    		zip=pJx
+    		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
+    		mirrorspath="etc/apt/sources.list"
+    		upgrade="apt update "
+    		;;
         ubuntu)
-		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
-		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
-		rm tmp.html
-		aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/arm64/default/${ttime}rootfs.tar.xz
+    		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+    		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
+    		rm tmp.html
+    		aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/arm64/default/${ttime}rootfs.tar.xz
 	        arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/armhf/default/${ttime}rootfs.tar.xz
-		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/i386/default/${ttime}rootfs.tar.xz
-		amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/amd64/default/${ttime}rootfs.tar.xz
-		zip=pJx
-		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic-updates main restricted universe multiverse"
+    		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/i386/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/amd64/default/${ttime}rootfs.tar.xz
+    		zip=pJx
+    		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic-updates main restricted universe multiverse"
 	        mirrorspath="etc/apt/sources.list"
-		upgrade="apt update "
-		;;
-	kali)
-		select_linux "debian"
-		upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y && echo -e "deb http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
-		;;
-	*)
-		error "[ 不支持的发行版 $1 ]"
-		;;
-	        esac
+    		upgrade="apt update "
+	    	;;
+    	kali)
+    		select_linux "debian"
+	    	upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y && echo -e "deb http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
+    		;;
+    	*)
+    		error "[ 不支持的发行版 $1 ]"
+    		;;
+    esac
 
 }
 function clean_tmp()
 {
-    tips "正在清除缓存"
+    tips "[  正在清除缓存 ]"
     rm ${atilo_tmp}/*
 }
 function install_linux()
@@ -354,41 +352,41 @@ function main()
 			case ${time_arch} in
 			   arm64)
 			        url=${aarch64}
-			   ;;
+                ;;
 			   armhf)
 			        url=${arm}
-			   ;;
+                ;;
 			   i386)
-   				url=${i386}
-                           ;;
-                           amd64)
-                                 url=${amd64}
-                           ;;
+   				    url=${i386}
+                ;;
+                amd64)
+                    url=${amd64}
+                ;;
 			esac
-	                select_linux ${release_name}	
+	        select_linux ${release_name}	
 			install_linux
-			;;
-	                remove|rm)
+			    ;;
+	        remove|rm)
 			          remove_linux
 			;;
-		        list|ls)
-                                 if [[ $2 == "--installed" ]]; then
-                                    local_linux
-                                 else
+		    list|ls)
+                    if [[ $2 == "--installed" ]]; then
+                            local_linux
+                    else
 			            list_linux 
-                                 fi
+                    fi
 			;;
-		        help)
-		              show_usage
-			;;
-                        clean)
-                              clean_tmp
-                        ;;
-		      "")
+		    help)
 		        show_usage
-	                error "[ 请指定一个命令 ]"
-		      ;;
-		        *)
+			;;
+            clean)
+                clean_tmp
+            ;;
+		    "")
+		        show_usage
+	            error "[ 请指定一个命令 ]"
+		    ;;
+		    *)
 			error "[ 未知的命令 ]"
 			;;
 		
