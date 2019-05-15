@@ -4,7 +4,7 @@
 # https://github.com/YadominJinta/atilo has info about the project.
 # https://github.com/YadominJinta/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
 
-version="1.5 EN"
+version="1.6 EN"
 writer="@YadominJinta @seashell11234455"
 support_linux=("alpine" "arch" "centos" "debian" "fedora" "kali" "opensuse" "parrot" "ubuntu" "ubuntults" )
 support_arch=("arm" "aarch64")
@@ -54,7 +54,6 @@ function check_for_req()
     if [ ! -e $PREFIX/bin/grep ]; then
         requirements="${requirements} grep"
     fi
-
     if [ ! -z "$requirements" ]; then
         tips "[ Installing requirements ... ]"
         pkg install ${requirements} libcurl -y
@@ -152,9 +151,9 @@ function select_linux()
 {
             case "$1" in
                 fedora)
-                    aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
+                    aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/30/Container/aarch64/images/Fedora-Container-Base-30-1.2.aarch64.tar.xz
                     arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
-                    amd64=https://dl.fedoraproject.org/pub/fedora/linux/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
+		    amd64=https://dl.fedoraproject.org/pub/fedora/linux/releases/30/Container/x86_64/images/Fedora-Container-Base-30-1.2.x86_64.tar.xz
                     if [[ ${time_arch} = "i386" ]]
                     then 
                         error "Fedora doesn't provide x86 image."
@@ -197,10 +196,10 @@ function select_linux()
                     upgrade="apt update"
                     ;;
                 ubuntu)
-                    aarch64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-arm64-root.tar.gz 
-                    arm=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-armhf-root.tar.gz 
-                    i386=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-i386-root.tar.gz
-                    amd64=https://partner-images.canonical.com/core/cosmic/current/ubuntu-cosmic-core-cloudimg-amd64-root.tar.gz
+		    aarch64=https://partner-images.canonical.com/core/disco/current/ubuntu-disco-core-cloudimg-arm64-root.tar.gz	
+                    arm=https://partner-images.canonical.com/core/disco/current/ubuntu-disco-core-cloudimg-armhf-root.tar.gz
+                    i386=https://partner-images.canonical.com/core/disco/current/ubuntu-disco-core-cloudimg-i386-root.tar.gz
+                    amd64=https://partner-images.canonical.com/core/disco/current/ubuntu-disco-core-cloudimg-amd64-root.tar.gz
                     zip=zx
                     upgrade="apt update"
                     ;;

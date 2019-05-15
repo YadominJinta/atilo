@@ -4,7 +4,7 @@
 # https://github.com/YadominJinta/atilo has info about the project.
 # https://github.com/YadominJinta/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
 
-version="1.5 CN"
+version="1.6 CN"
 writer="@YadominJinta @seashell11234455"
 support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" )
 support_arch=("arm" "aarch64")
@@ -156,9 +156,9 @@ function select_linux()
 
 	case "$1" in
 	     fedora)
-            aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/29/Container/aarch64/images/Fedora-Container-Base-29-1.2.aarch64.tar.xz
+            aarch64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/30/Container/aarch64/images/Fedora-Container-Base-30-1.2.aarch64.tar.xz
 		    arm=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
-		    amd64=https://mirror.tuna.tsinghua.edu.cn/fedora/releases/29/Container/x86_64/images/Fedora-Container-Base-29-1.2.x86_64.tar.xz
+		    amd64=https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/30/Container/x86_64/images/Fedora-Container-Base-30-1.2.x86_64.tar.xz
 		    if [[ ${time_arch} = "i386" ]]; then 
                  error "Fedora 不支持x86架构"
             fi
@@ -168,10 +168,10 @@ function select_linux()
 		    curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
 		    ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
 	        rm tmp.html
-	    	aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
-	    	arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
-	    	amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/amd64/default/${ttime}rootfs.tar.xz
-    		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz
+	    	aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
+	    	arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
+	    	amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/amd64/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz
     		zip=pJx
 	        mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
     		mirrorspath="etc/apt/sources.list"
@@ -180,8 +180,8 @@ function select_linux()
 	    alpine)
             aarch64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz 
 	    	arm=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.0-armhf.tar.gz
-    		amd64=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
-    		i386=https://mirror.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86/alpine-minirootfs-3.9.0-x86.tar.gz
+    		amd64=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/releases/x86/alpine-minirootfs-3.9.0-x86.tar.gz
             zip=pzx
     		sh=ash
     		mirrors="http://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/main\nhttp://mirrors.tuna.tsinghua.edu.cn/alpine/v3.9/community"
@@ -200,28 +200,28 @@ function select_linux()
     		upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
 	    	;;
     	ubuntults)
-    		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+    		curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
     		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
 		rm tmp.html
-	        aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
-    		arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
-    		amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/amd64/default/${ttime}rootfs.tar.xz
-    		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/i386/default/${ttime}rootfs.tar.xz
+	        aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
+    		arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/amd64/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/i386/default/${ttime}rootfs.tar.xz
     		zip=pJx
     		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports bionic-updates main restricted universe multiverse"
     		mirrorspath="etc/apt/sources.list"
     		upgrade="apt update "
     		;;
         ubuntu)
-    		curl "https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+    		curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
     		ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`
     		rm tmp.html
-    		aarch64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/arm64/default/${ttime}rootfs.tar.xz
-	        arm=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/armhf/default/${ttime}rootfs.tar.xz
-    		i386=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/i386/default/${ttime}rootfs.tar.xz
-    		amd64=https://mirror.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/cosmic/amd64/default/${ttime}rootfs.tar.xz
+    		aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/arm64/default/${ttime}rootfs.tar.xz
+	        arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/armhf/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/i386/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/amd64/default/${ttime}rootfs.tar.xz
     		zip=pJx
-    		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports cosmic-updates main restricted universe multiverse"
+    		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports disco main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports disco-updates main restricted universe multiverse"
 	        mirrorspath="etc/apt/sources.list"
     		upgrade="apt update "
 	    	;;
