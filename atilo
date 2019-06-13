@@ -57,8 +57,6 @@ function check_for_req()
     if [ ! -z "$requirements" ]; then
         tips "[ Installing requirements ... ]"
         pkg install ${requirements} 
-    else
-			pkg install libcurl -y
     fi
 }
 
