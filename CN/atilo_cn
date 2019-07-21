@@ -163,15 +163,15 @@ function select_linux()
 		    upgrade="dnf makecache"
 	    	;;
 	    debian)
-		    curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/${time_arch}/default/" -o tmp.html 
+		    curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/${time_arch}/default/" -o tmp.html 
 		    ttime=`sed -n '7p' tmp.html | cut -d'>' -f2 | cut -d'<' -f1`              
 	        rm tmp.html
-	    	aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/arm64/default/${ttime}rootfs.tar.xz
-	    	arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/armhf/default/${ttime}rootfs.tar.xz
-	    	amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/amd64/default/${ttime}rootfs.tar.xz
-    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/stretch/i386/default/${ttime}rootfs.tar.xz
+	    	aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/arm64/default/${ttime}rootfs.tar.xz
+	    	arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/armhf/default/${ttime}rootfs.tar.xz
+	    	amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/amd64/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/i386/default/${ttime}rootfs.tar.xz
     		zip=pJx
-	        mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian stretch main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ stretch/updates main"
+	        mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/debian buster main\ndeb http://mirrors.tuna.tsinghua.edu.cn/debian-security/ buster/updates main"
     		mirrorspath="etc/apt/sources.list"
     		upgrade="apt update && apt upgrade"
 	    	;;

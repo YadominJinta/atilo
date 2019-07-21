@@ -159,10 +159,10 @@ function select_linux()
                     upgrade="dnf makecache"
                     ;;
                 debian)
-                    aarch64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm64v8/stretch/slim/rootfs.tar.xz 
-                    arm=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm32v7/stretch/slim/rootfs.tar.xz 
-                    amd64=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-i386/stretch/rootfs.tar.xz
-                    i386=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-amd64/stretch/rootfs.tar.xz
+                    aarch64=https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/buster/slim/rootfs.tar.xz
+                    arm=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm32v7/buster/slim/rootfs.tar.xz 
+                    amd64=https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz
+                    i386=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-amd64/buster/rootfs.tar.xz
                     zip=Jx
                     upgrade="apt update && apt upgrade"
                     ;;
