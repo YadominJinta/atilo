@@ -4,7 +4,7 @@
 # https://github.com/YadominJinta/atilo has info about the project.
 # https://github.com/YadominJinta/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
 
-version="1.6 EN"
+version="1.7 EN"
 writer="@YadominJinta @seashell11234455"
 support_linux=("alpine" "arch" "centos" "debian" "fedora" "kali" "opensuse" "parrot" "ubuntu" "ubuntults" )
 support_arch=("arm" "aarch64")
@@ -167,10 +167,10 @@ function select_linux()
                     upgrade="apt update && apt upgrade"
                     ;;
                 alpine)
-                    aarch64=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz
-                    arm=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.0-armhf.tar.gz
-                    amd64=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86_64/alpine-minirootfs-3.9.0-x86_64.tar.gz
-                    i386=http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/x86/alpine-minirootfs-3.9.0-x86.tar.gz
+                    aarch64=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/aarch64/alpine-minirootfs-3.10.0-aarch64.tar.gz
+                    arm=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/armhf/alpine-minirootfs-3.10.0-armhf.tar.gz
+                    amd64=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64/alpine-minirootfs-3.10.0-x86_64.tar.gz
+                    i386=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-minirootfs-3.10.0-x86.tar.gz
                     zip=pzx
                     sh=ash
                     upgrade="apk update && apk upgrade"
