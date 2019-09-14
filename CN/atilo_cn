@@ -232,7 +232,7 @@ function select_linux()
     		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/i386/default/${ttime}rootfs.tar.xz
     		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/amd64/default/${ttime}rootfs.tar.xz
 			zip=pJx
-			mirrors="deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib"
+			mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib"
 	        mirrorspath="etc/apt/sources.list"
     		upgrade="apt update "
     		;;
