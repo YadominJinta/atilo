@@ -6,8 +6,8 @@
 
 version="1.7.1 CN"
 writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "debian" "fedora" "kali" "ubuntu" "ubuntults" )
-support_arch=("arm" "aarch64")
+support_linux=("alpine" "arch" "centos" "debian" "fedora" "kali" "ubuntu" "ubuntults" "opensuse" )
+support_arch=("arm" "aarch64" "amd64" "i386" )
 atilo_home=$HOME/.atilo
 atilo_tmp=${atilo_home}/tmp
 
@@ -236,6 +236,27 @@ function select_linux()
 	        mirrorspath="etc/apt/sources.list"
     		upgrade="apt update "
     		;;
+		centos)
+			curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/centos/7/${time_arch}/default/"  -o tmp.html > /dev/null 2>&1
+			ttime=`cat tmp.html |tail -n2|head -n1 |cut -d\" -f4`
+			rm tmp.html
+			aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/centos/7/arm64/default/${ttime}rootfs.tar.xz
+        	arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/centos/7/armhf/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/centos/7/i386/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/centos/7/amd64/default/${ttime}rootfs.tar.xz
+			zip=pJx
+			upgrade="yum makecache"
+			;;
+		opensuse)
+			curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/opensuse/tumbleweed/${time_arch}/default/"  -o tmp.html > /dev/null 2>&1
+			ttime=`cat tmp.html |tail -n2|head -n1 |cut -d\" -f4`
+			rm tmp.html
+			aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/opensuse/tumbleweed/arm64/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/opensuse/tumbleweed/i386/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/opensuse/tumbleweed/amd64/default/${ttime}rootfs.tar.xz
+			zip=pJx
+			upgrade="zypper ref"
+			;;
     	*)
     		error "[ 不支持的发行版 $1 ]"
     		;;
