@@ -231,6 +231,9 @@ function select_linux()
 	        arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/armhf/default/${ttime}rootfs.tar.xz
     		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/i386/default/${ttime}rootfs.tar.xz
     		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/amd64/default/${ttime}rootfs.tar.xz
+			mirrors="deb https://mirrors.ustc.edu.cn/kali kali-rolling main non-free contrib"
+	        mirrorspath="etc/apt/sources.list"
+    		upgrade="apt update "
     		;;
     	*)
     		error "[ 不支持的发行版 $1 ]"
