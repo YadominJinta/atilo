@@ -163,7 +163,7 @@ function select_linux()
 		    upgrade="dnf makecache"
 	    	;;
 	    debian)
-		    curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/${time_arch}/default/" -o tmp.html 
+		    curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/${time_arch}/default/" -o tmp.html  >/dev/null 2>&1
 		    ttime=`cat tmp.html |tail -n2|head -n1 |cut -d\" -f4`              
 	        rm tmp.html
 	    	aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/debian/buster/arm64/default/${ttime}rootfs.tar.xz
@@ -198,7 +198,7 @@ function select_linux()
     		upgrade="pacman-key --init && pacman-key --populate archlinuxarm "
 	    	;;
     	ubuntults)
-    		curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+    		curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
     		ttime=`cat tmp.html |tail -n2|head -n1 |cut -d\" -f4`
 			rm tmp.html
 	        aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/${ttime}rootfs.tar.xz
@@ -211,7 +211,7 @@ function select_linux()
     		upgrade="apt update "
     		;;
         ubuntu)
-    		curl "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+    		curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
     		ttime=`cat tmp.html |tail -n2|head -n1 |cut -d\" -f4`
     		rm tmp.html
     		aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/arm64/default/${ttime}rootfs.tar.xz
@@ -224,8 +224,13 @@ function select_linux()
     		upgrade="apt update "
 	    	;;
     	kali)
-    		select_linux "debian"
-	    	upgrade='apt update &&apt install gnupg gnupg1 gnupg2 -y && echo -e "deb http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib\ndeb-src http://mirrors.tuna.tsinghua.edu.cn/kali kali-rolling main non-free contrib" > /etc/apt/sources.list && apt-key adv --recv ED444FF07D8D0BF6 && apt update && apt upgrade'
+			curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/${time_arch}/default/" -o tmp.html > /dev/null 2>&1
+			ttime=`cat tmp.html |tail -n2|head -n1 |cut -d\" -f4`
+			rm tmp.html
+			aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/arm64/default/${ttime}rootfs.tar.xz
+	        arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/armhf/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/i386/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/kali/current/amd64/default/${ttime}rootfs.tar.xz
     		;;
     	*)
     		error "[ 不支持的发行版 $1 ]"
