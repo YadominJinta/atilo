@@ -27,9 +27,11 @@ help             帮助
 | ------------ | :-----: |:-: | :-----: | :--: |
 |Arch          |√        |√   |×        |×     |
 |Alpine|√|√|√|√|
+|CentOS|√|√|√|√|
 |Debian|√|√|√|√|
 |Fedora|√|√|√|×|
 |Kali|√|√|√|√|
+|OpenSuSE|√|×|√|√
 |Ubuntu Cosmic|√|√|√|√|
 |Ubuntu LTS|√|√|√|√|
 
