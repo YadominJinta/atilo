@@ -210,15 +210,15 @@ function select_linux()
     		upgrade="apt update "
     		;;
         ubuntu)
-    		curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
+    		curl -L "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/${time_arch}/default/" -o tmp.html >/dev/null 2>&1
     		ttime=`cat tmp.html |tail -n2|head -n1 |cut -d\" -f4`
     		rm tmp.html
-    		aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/arm64/default/${ttime}rootfs.tar.xz
-	        arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/armhf/default/${ttime}rootfs.tar.xz
-    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/i386/default/${ttime}rootfs.tar.xz
-    		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/disco/amd64/default/${ttime}rootfs.tar.xz
+    		aarch64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/arm64/default/${ttime}rootfs.tar.xz
+	        arm=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/armhf/default/${ttime}rootfs.tar.xz
+    		i386=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/i386/default/${ttime}rootfs.tar.xz
+    		amd64=https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/amd64/default/${ttime}rootfs.tar.xz
     		zip=pJx
-    		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports disco main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports disco-updates main restricted universe multiverse"
+    		mirrors="deb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports eoan main restricted universe multiverse\ndeb http://mirrors.tuna.tsinghua.edu.cn/ubuntu-ports eoan-updates main restricted universe multiverse"
 	        mirrorspath="etc/apt/sources.list"
     		upgrade="apt update "
 	    	;;
