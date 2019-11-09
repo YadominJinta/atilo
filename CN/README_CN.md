@@ -1,13 +1,16 @@
 # Atilo
+
 在Termux安装Linux的bash脚本
 
 ## 安装
+
 ``` bash
-echo "deb [trusted=yes] https://yadominjinta.github.io/files/ termux    extras" >> $PREFIX/etc/apt/sources.list
+echo "deb [trusted=yes] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list
 pkg in atilo-cn
 ```
 
 ## 使用方法
+
 ``` bash
 atilo [命令] [参数]
 Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。
@@ -23,35 +26,29 @@ help             帮助
 
 ## 支持的发行版
 
-| 发行版 | aarch64 | arm | x86_64 | i686 |
-| ------------ | :-----: |:-: | :-----: | :--: |
-|Arch          |√        |√   |×        |×     |
-|Alpine|√|√|√|√|
-|CentOS|√|√|√|√|
-|Debian|√|√|√|√|
-|Fedora|√|√|√|×|
-|Kali|√|√|√|√|
-|OpenSuSE|√|×|√|√
-|Ubuntu Cosmic|√|√|√|√|
-|Ubuntu LTS|√|√|√|√|
+| 发行版        | aarch64 |  arm  | x86_64 | i686  |
+| ------------- | :-----: | :---: | :----: | :---: |
+| Arch          |    √    |   √   |   ×    |   ×   |
+| Alpine        |    √    |   √   |   √    |   √   |
+| CentOS        |    √    |   √   |   √    |   √   |
+| Debian        |    √    |   √   |   √    |   √   |
+| Fedora        |    √    |   ×   |   √    |   ×   |
+| Kali          |    √    |   √   |   √    |   √   |
+| OpenSuSE      |    √    |   ×   |   √    |   √   |
+| Ubuntu Cosmic |    √    |   √   |   √    |   √   |
+| Ubuntu LTS    |    √    |   √   |   √    |   √   |
 
-
-
-**备注**:    
-1.Fedora 29没有提供arm架构的镜像，请运行`dnf update --releasever=29`来升级。  
 ## 图形
+
 [在termux上开启图形化](https://yadominjinta.github.io/2018/07/30/GUI-on-termux.html)
 
-
 ## 群组
+
 QQ:[Termux社](https://jq.qq.com/?_wv=1027&k=5jGvbsU)  
 Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 
-## Note
-1.仅有有国内镜像的发行版才会加到CN版中  
-2.CN版的Kali是用Debian升级得到的
-
 ## 相关项目
+
 **[EXALAB/AnLinux-App](https://github.com/EXALAB/AnLinux-App)**: APP to help install Linux on termux.  
 **[sdrausty/TermuxArch](https://github.com/sdrausty/TermuxArch)**: Arch install script  
 **[Neo-Oli/termux-ubuntu](https://github.com/Neo-Oli/termux-ubuntu)**: Ubuntu chroot on termux  

@@ -149,12 +149,11 @@ function select_linux()
 {
             case "$1" in
                 fedora)
-                    aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/30/Container/aarch64/images/Fedora-Container-Base-30-1.2.aarch64.tar.xz
-                    arm=https://dl.fedoraproject.org/pub/fedora/linux/releases/27/Docker/armhfp/images/Fedora-Docker-Base-27-1.6.armhfp.tar.xz
-		    amd64=https://dl.fedoraproject.org/pub/fedora/linux/releases/30/Container/x86_64/images/Fedora-Container-Base-30-1.2.x86_64.tar.xz
-                    if [[ ${time_arch} = "i386" ]]
+                    aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/31/Container/aarch64/images/Fedora-Container-Base-31-1.9.aarch64.tar.xz
+		            amd64=https://dl.fedoraproject.org/pub/fedora/linux/releases/31/Container/x86_64/images/Fedora-Container-Base-31-1.9.x86_64.tar.xz
+                    if [[ ${time_arch} = "i386" || ${time_arch} = "armhf" ]]
                     then 
-                        error "Fedora doesn't provide x86 image."
+                        error "Fedora doesn't provide x86 and armhf image."
                     fi
                     upgrade="dnf makecache"
                     ;;
