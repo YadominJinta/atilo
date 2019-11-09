@@ -281,7 +281,7 @@ function install_linux()
 		tips "[ 跳过下载 ]"
 	else
 		ls -A | xargs rm -rf 
-		curl "${url}" -o ${release_name} --progress -C -
+		curl "${url}" -o ${release_name} --progress-bar -C -
 	fi
 
 	tips "[ 解压中 ... ]"
