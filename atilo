@@ -193,7 +193,7 @@ function select_linux()
                     upgrade="apt update"
                     ;;
                 ubuntu)
-		    aarch64=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-arm64-root.tar.gz	
+		            aarch64=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-arm64-root.tar.gz	
                     arm=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-armhf-root.tar.gz
                     i386=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-i386-root.tar.gz
                     amd64=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-amd64-root.tar.gz
@@ -201,24 +201,27 @@ function select_linux()
                     upgrade="apt update"
                     ;;
                 kali)
-                    aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/arm64/kali-rootfs-arm64.tar.gz
-                    arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/armhf/kali-rootfs-armhf.tar.gz
-                    amd64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/amd64/kali-rootfs-amd64.tar.gz
-                    i386=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/i386/kali-rootfs-i386.tar.gz
-                    zip=xz
+                    aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/arm64/kali-rootfs-arm64.tar.xz
+                    arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/armhf/kali-rootfs-armhf.tar.xz
+                    amd64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/amd64/kali-rootfs-amd64.tar.xz
+                    i386=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/i386/kali-rootfs-i386.tar.xz
+                    zip=Jx
                     upgrade="apt update"
                     ;;
                 centos)
-                    aarch64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7-aarch64/docker/centos-7arm64-docker.tar.xz
-                    arm=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7armhfp/docker/centos-7armhfp-docker.tar.xz
-                    i386=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7i386/docker/centos-7i386-docker.tar.xz
-                    amd64=https://raw.githubusercontent.com/CentOS/sig-cloud-instance-images/CentOS-7/docker/centos-7-docker.tar.xz
+                    aarch64=https://github.com/CentOS/sig-cloud-instance-images/raw/CentOS-8.1.1911-aarch64/docker/CentOS-8-Container-8.1.1911-20200113.3-layer.aarch64.tar.xz
+                    amd64=https://github.com/CentOS/sig-cloud-instance-images/raw/CentOS-8.1.1911-x86_64/docker/CentOS-8-Container-8.1.1911-20200113.3-layer.x86_64.tar.xz
+                    if [[ ${time_arch} == "armhf" || ${time_arch} == "i386" ]]; then
+                        echo "CentOS doesn't provides arm/x86 image."
+                    fi
                     zip=Jx
                     upgrade="yum makecache"
                     ;;
                 parrot)
-                    aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/arm64/parrot-rootfs-arm64.tar.gz
-                    arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/armhf/parrot-rootfs-armhf.tar.gz
+                    if [[ ${time_arch} == "arm64" || ${time_arch} == "armhf" ]];then
+                        echo "Parrot doesn't provide a arm/aarch64 image."
+                        exit 1
+                    fi
                     i386=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/amd64/parrot-rootfs-amd64.tar.gz
                     amd64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/i386/parrot-rootfs-i386.tar.gz
                     zip=xz
@@ -230,7 +233,7 @@ function select_linux()
                     if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
                     then
                         error "OpenSuSE doesn't provide x86 image."
-		fi
+		            fi
                     zip=xz
                     upgrade="zypper up"
                     ;;
