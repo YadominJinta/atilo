@@ -1,387 +1,332 @@
-#!/data/data/com.termux/files/usr/bin/bash
+#! /usr/bin/env python3
 
 # Copyright 2017-2020 by YadominJinta. All rights reserved.
 # https://github.com/YadominJinta/atilo has info about the project.
 # https://github.com/YadominJinta/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
 
-version="1.8 EN"
-writer="@YadominJinta @seashell11234455"
-support_linux=("alpine" "arch" "centos" "debian" "fedora" "kali" "opensuse" "parrot" "ubuntu" "ubuntults" )
-support_arch=("arm" "aarch64")
-atilo_home=$HOME/.atilo
-atilo_tmp=${atilo_home}/tmp
+import os
+import tarfile
+import requests
+import json
+import hashlib
+import io
+import sys
+from tqdm import tqdm
+from prettytable import PrettyTable 
 
-# Create Dir
-if [ ! -d ${atilo_home} ]; then
-    mkdir -p ${atilo_home}
-fi
-if [ ! -d ${atilo_tmp} ]; then
-    mkdir -p ${atilo_tmp}
-fi
 
-function tips()
-{
-    echo -e "\033[32m$@\033[0m"
-}
+home = os.getenv('HOME')
+atilo_home = home + '/.atilo/'
+atilo_tmp  = atilo_home + 'tmp/'
+atilo_config = atilo_home + 'local.json'
+atilo_version = "2.0-Alpha"
 
-function error()
-{
-    echo -e "\033[1;31m$@\033[0m" 1>&2
-    exit 1
-}
+def check_dir():
+    if not os.path.isdir(atilo_home):
+        os.mkdir(atilo_home)
+    if not os.path.isdir(atilo_tmp):
+        os.mkdir(atilo_tmp)
 
-function check_for_req()
-{
-    tips "[ Checking for requirements ... ]"
-    requirements=""
+def check_arch():
+    arch = os.uname().machine
+    if arch == 'aarch64':
+        pass
+    elif arch == 'x86_64':
+        arch = 'amd64'
+    elif arch.__contains__('86'):
+        arch = 'i386'
+    elif arch.__contains__('arm'):
+        arch = 'armhf'
+    else:
+        print('Your device''s arch are not in supoport')
+        exit(1)
+    return arch
 
-    if [ ! -e $PREFIX/bin/tar ]; then
-        requirements="${requirements} tar"
-    fi
+def load_local():
+    if not os.path.isfile(atilo_config):
+        with open(atilo_config,'w') as f:
+            arch = check_arch()
+            data = {
+                'config': {
+                    'arch': arch,
+                    'version': atilo_version
+                }
+            }
+            json.dump(data,indent=4,fp=f)
+    with open(atilo_config,'r') as f:
+        config = json.load(f)
+    return config
 
-    if [ ! -e $PREFIX/bin/proot ]; then
-        requirements="${requirements} proot"
-    fi
+def get_list():
+    r = requests.get('https://github.com/YadominJinta/atilo/raw/master/src/list.json')
+    if not r.status_code == 200:
+        print('Can''t get images lists.')
+        exit(1)
+    return r.json()
 
-    if [ ! -e $PREFIX/bin/pv ]; then
-        requirements="${requirements} pv"
-    fi
+def show_list():
+    lists = get_list()
+    config = load_local()
+    table = PrettyTable()
+    arch = check_arch()
+    table.field_names = ["Name","Version","Installed","Installable"]
+    for i in lists.get('linux'):
+        name = i
+        infos = lists.get(name)
+        version = infos.get ('version')
+        installed = (config.keys()).__contains__(name)
+        installable = (infos.keys()).__contains__(arch)
+        table.add_row([name,version,installed,installable])
+    print(table.get_string())
 
-    if [ ! -e $PREFIX/bin/curl ]; then
-        requirements="${requirements} curl"
-    fi
+def pull_image(distro):
+    arch = check_arch()
+    lists = get_list()
+    config = load_local()
+    if distro in config.keys():
+        print('You have installed ' + distro)
+        exit(1)
+    if distro not in lists.keys():
+        print(distro + ' not found')
+        exit(1)
+    infos = lists.get(distro)
+    if arch not in infos.keys():
+        print(distro + ' not suppoer your arch')
+        exit(1)
+    url = infos.get(arch)
+    print('Pulling image')
+    r = requests.get(url,stream=True)
+    if not r.status_code == 200:
+        print('Can''t pull the image')
+        print('Network Error')
+        exit(1)
+    total_size = int(r.headers.get('Content-Length'))
+    block_size = io.DEFAULT_BUFFER_SIZE
+    t = tqdm(total=total_size,unit='iB',unit_scale=True)
+    with open(atilo_tmp + distro,'wb') as f:
+        for chunk in r.iter_content(block_size):
+            t.update(len(chunk))
+            f.write(chunk)
+    r.close()
+    t.close()
+    if infos.get('check') == 'ubuntu':
+        check_url = 'https://partner-images.canonical.com/core/' + infos.get('version') + '/current/MD5SUMS'
+        check_sum_ubuntu(distro,check_url)
+    elif infos.get('check') == 'no':
+        print(distro + ' has no check method')
+        print('skiping')
+    else:
+        check_url = url + '.' + infos.get('check')
+        check_sum(distro=distro,url=check_url,check=infos.get('check'))
+    
+    if not infos.get('zip') == 'fedora':
+        extract_file(distro,infos.get('zip'))
+    else:
+        extract_fedora()
+    config_image(distro,infos)
 
-    if [ ! -e $PREFIX/bin/grep ]; then
-        requirements="${requirements} grep"
-    fi
-    if [ ! -z "$requirements" ]; then
-        tips "[ Installing requirements ... ]"
-        pkg install ${requirements} 
-    fi
-}
+def remove_image(distro):
+    distro_path = atilo_home + distro
+    print('Removing image '+ distro)
+    os.system('chmod -R 777 ' + distro_path)
+    os.system('rm -rf ' + distro_path)
+    config = load_local()
+    del config[distro]
+    with open(atilo_config,'w') as f:
+        json.dump(config,indent=4,fp=f)
 
-function check_for_arch()
-{
-    architecture=$(uname -m)
 
-    if [ ${architecture} == "aarch64" ]
-    then
-        time_arch="arm64"
-    elif [[ ${architecture} =~ .*(arm).* ]]
-    then
-        time_arch="armhf"
-    elif [[ ${architecture} = "i686" ]]
-    then
-        time_arch="i386"
-    elif [[ ${architecture} = "x86_64" ]]
-    then
-        time_arch="amd64"
-    else
-        error "[ Unsupported architecture ${architecture}]"
-    fi
-}
+def config_image(distro,infos):
+    print('Configuring image')
+    distro_path = atilo_home + distro
+    resolv_conf = distro_path + '/etc/resolv.conf'
+    with open(resolv_conf,'w') as f:
+        f.write('nameserver 1.1.1.1\n')
+        f.write('nameserver 8.8.8.8\n')
+    config = load_local()
+    config.update({distro : infos})
+    with open(atilo_config,'w') as f:
+        json.dump(config,indent=4,fp=f)
+    print('All done')
+    print('Run it with atilo run ' + distro)
+    
+def extract_file(distro,zip_m):
+    distro_path = atilo_home + distro
+    file_path = atilo_tmp + distro
+    zip_f = tarfile.open(file_path,'r:'+zip_m)
+    if not os.path.isdir(distro_path):
+        os.mkdir(distro_path)
+    print('Extracting image')
+    zip_f.extractall(distro_path,numeric_owner=True)
 
-function show_moo()
-{
-    tips '
-                 (__) 
-                 (oo) 
-           /------\/ 
-          / |    ||   
-         *  /\---/\ 
-            ~~   ~~   
-..."Have you mooed today?"...
-    ' 
-}
+def extract_fedora():
+    file_path = atilo_tmp+ 'fedora'
+    distro_path = atilo_home + 'fedora'
+    print('Extracting image')
+    zip_f = tarfile.open(file_path)
+    for i in zip_f.getnames():
+        if i.__contains__('layer.tar'):
+            zip_name = i
+    zip_f.close()
+    zip_f = tarfile.open(atilo_tmp + zip_name,'r')
+    if not os.path.isdir(distro_path):
+        os.mkdir(distro_path)
+    zip_f.extractall(distro_path,numeric_owner=True)
+    
 
-function show_usage()
-{
-    tips "Atilo \t ${version}"
-    tips "Usage: $0 [command] [Arguments] \n"
-    tips "Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n"
-    tips "Commands:"
-    tips "list\t\t list available and installed distributions"
-    tips "   --installed   list installed distributions"
-    tips "remove\t\t remove installed distributions"
-    tips "install\t\t install distributions"
-    tips "clean\t\t delete tmps"
-    tips "help\t\t Show this help"
-    tips "Writen by ${writer} "
-    tips "This atilo has super cow power"
-}
+def check_sum(distro,url,check):
+    print('Checking file integrity')
+    r = requests.get(url)
+    file_path = atilo_tmp + distro
+    if not r.status_code == 200:
+        print('Can''t get checksum file,are you sure to continue? [y/N]',end=' ')
+        a = ''
+        input(a)
+        if not a == 'y':
+            print('Exiting')
+            os.remove(file_path)
+            exit(1)
+        else:
+            return
+    sum_calc = hashlib.md5() if check == 'md5' else  hashlib.sha256()
+    total_size = os.path.getsize(file_path)
+    block_size = io.DEFAULT_BUFFER_SIZE
+    t = tqdm(total=total_size,unit='iB',unit_scale=True)
+    with open(file_path,'rb') as f:
+        for chunk in iter(lambda: f.read(block_size ), b''):
+            t.update(len(chunk))
+            sum_calc.update(chunk)
+    t.close()
+    f.close()
 
-function list_linux()
-{
-    tips "The followings are available"
-    for i in ${support_linux[@]}
-    do
-        tips $i
-    done
-}
+    if r.text.__contains__(sum_calc.hexdigest()):
+        print('Checksum successfully')
+        return 0
+    else:
+        print('Checksum error')
+        print('Exiting')
+        os.remove(file_path)
+        exit(1)
 
-function local_linux()
-{
-    tips "Installed \n"
-    cd ${atilo_home}
-    for i in $(ls ./)
-    do
-        if [ $i != "tmp" ]; then
-            tips $i
-        fi
-    done
-}
+def check_sum_ubuntu(distro,url):
+    r = requests.get(url)
+    file_path = atilo_tmp + distro
+    if not r.status_code == 200:
+        print('Can''t get checksum file,are you sure to continue? [y/n]',end=' ')
+        a = ''
+        input(a)
+        if not a == 'y':
+            print('Exiting')
+            os.remove(file_path)
+            exit(1)
+    sum_calc = hashlib.md5()
+    total_size = os.path.getsize(file_path)
+    block_size = io.DEFAULT_BUFFER_SIZE
+    t = tqdm(total=total_size,unit='iB',unit_scale=True)
+    with open(file_path,'rb') as f:
+        for chunk in iter(lambda: f.read(block_size),b''):
+            t.update(len(chunk))
+            sum_calc.update(chunk)
+    t.close()
+    f.close()
 
-function remove_linux()
-{
-    cd ${atilo_home}
-    if [ -d ${release_name} ]; then
-        chmod -R 0755 ./${release_name}
-        rm -rf ./${release_name}
-        rm -f $PREFIX/bin/start${release_name}
-        tips "[ Successfully delete ${release_name} ]"
-        exit 0
-    else
-        error "[ Unable to locate ${release_name} ]"
-    fi
-}
+    if r.text.__contains__(sum_calc.hexdigest()):
+        return 0
+    else:
+        print('Checksum error')
+        print('Exiting')
+        os.remove(file_path)
+        exit(1)
 
-function select_linux()
-{
-            case "$1" in
-                fedora)
-                    aarch64=https://dl.fedoraproject.org/pub/fedora/linux/releases/31/Container/aarch64/images/Fedora-Container-Base-31-1.9.aarch64.tar.xz
-		            amd64=https://dl.fedoraproject.org/pub/fedora/linux/releases/31/Container/x86_64/images/Fedora-Container-Base-31-1.9.x86_64.tar.xz
-                    if [[ ${time_arch} = "i386" || ${time_arch} = "armhf" ]]
-                    then 
-                        error "Fedora doesn't provide x86 and armhf image."
-                    fi
-                    upgrade="dnf makecache"
-                    ;;
-                debian)
-                    aarch64=https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-arm64v8/buster/slim/rootfs.tar.xz
-                    arm=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-arm32v7/buster/slim/rootfs.tar.xz 
-                    amd64=https://github.com/debuerreotype/docker-debian-artifacts/raw/dist-amd64/buster/slim/rootfs.tar.xz
-                    i386=https://raw.githubusercontent.com/debuerreotype/docker-debian-artifacts/dist-amd64/buster/rootfs.tar.xz
-                    zip=Jx
-                    upgrade="apt update && apt upgrade"
-                    ;;
-                alpine)
-                    aarch64=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/aarch64/alpine-minirootfs-3.10.0-aarch64.tar.gz
-                    arm=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/armhf/alpine-minirootfs-3.10.0-armhf.tar.gz
-                    amd64=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86_64/alpine-minirootfs-3.10.0-x86_64.tar.gz
-                    i386=http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/x86/alpine-minirootfs-3.10.0-x86.tar.gz
-                    zip=pzx
-                    sh=ash
-                    upgrade="apk update && apk upgrade"
-                    ;;
-                arch)
-                    aarch64=http://os.archlinuxarm.org/os/ArchLinuxARM-aarch64-latest.tar.gz
-                    arm=http://os.archlinuxarm.org/os/ArchLinuxARM-armv7-latest.tar.gz
-                    if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
-                    then
-                        error "Arch doesn't provide a x86 support"
-                    fi
-                    zip=pzx
-                    upgrade="pacman-key --init && pacman-key --populate archlinuxarm && pacman -Sy"
-                    ;;
-                ubuntults)
-                    aarch64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-arm64-root.tar.gz
-                    arm=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-armhf-root.tar.gz
-                    i386=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-i386-root.tar.gz
-                    amd64=https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz
-                    zip=zx
-                    upgrade="apt update"
-                    ;;
-                ubuntu)
-		            aarch64=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-arm64-root.tar.gz	
-                    arm=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-armhf-root.tar.gz
-                    i386=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-i386-root.tar.gz
-                    amd64=https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-amd64-root.tar.gz
-                    zip=zx
-                    upgrade="apt update"
-                    ;;
-                kali)
-                    aarch64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/arm64/kali-rootfs-arm64.tar.xz
-                    arm=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/armhf/kali-rootfs-armhf.tar.xz
-                    amd64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/amd64/kali-rootfs-amd64.tar.xz
-                    i386=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Kali/i386/kali-rootfs-i386.tar.xz
-                    zip=Jx
-                    upgrade="apt update"
-                    ;;
-                centos)
-                    aarch64=https://github.com/CentOS/sig-cloud-instance-images/raw/CentOS-8.1.1911-aarch64/docker/CentOS-8-Container-8.1.1911-20200113.3-layer.aarch64.tar.xz
-                    amd64=https://github.com/CentOS/sig-cloud-instance-images/raw/CentOS-8.1.1911-x86_64/docker/CentOS-8-Container-8.1.1911-20200113.3-layer.x86_64.tar.xz
-                    if [[ ${time_arch} == "armhf" || ${time_arch} == "i386" ]]; then
-                        echo "CentOS doesn't provides arm/x86 image."
-                    fi
-                    zip=Jx
-                    upgrade="yum makecache"
-                    ;;
-                parrot)
-                    if [[ ${time_arch} == "arm64" || ${time_arch} == "armhf" ]];then
-                        echo "Parrot doesn't provide a arm/aarch64 image."
-                        exit 1
-                    fi
-                    i386=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/amd64/parrot-rootfs-amd64.tar.gz
-                    amd64=https://raw.githubusercontent.com/EXALAB/AnLinux-Resources/master/Rootfs/Parrot/i386/parrot-rootfs-i386.tar.gz
-                    zip=xz
-                    upgrade="apt update"
-                    ;;
-                opensuse)
-                    aarch64=http://download.opensuse.org/ports/aarch64/distribution/leap/15.0/appliances/openSUSE-Leap15.0-ARM-JeOS.aarch64-rootfs.aarch64-2018.07.02-Buildlp150.1.1.tar.xz
-                    arm=http://download.opensuse.org/ports/armv7hl/distribution/leap/15.0/appliances/openSUSE-Leap15.0-ARM-JeOS.armv7-rootfs.armv7l-2018.07.02-Buildlp150.1.1.tar.xz
-                    if [[ ${time_arch} = "i386" || ${time_arch} = "amd64" ]]
-                    then
-                        error "OpenSuSE doesn't provide x86 image."
-		            fi
-                    zip=xz
-                    upgrade="zypper up"
-                    ;;
-                *)
-                    error "[ Unsupported release $1 ]"
-                    ;;
-            esac
+def run_image(arg):
+    distro = arg[0]
+    config = load_local()
+    if not distro in config.keys():
+        print('You don''t have ' + distro + 'image')
+        print('Pull it before running it')
+        exit(1)
+    distro_path = atilo_home + distro
+    infos = config.get(distro)
+    command = ''
+    command += 'proot'
+    command += ' --link2symlink'
+    command += ' -0'
+    command += ' -S '
+    command += distro_path
+    command += ' -b /sys'
+    command += ' -b /dev'
+    command += ' -b /proc'
+#   command += ' -b /sdcard'
+#   command += ' -b /system'
+#   command += ' -b /data/data/com.termux/files/home'
+    command += ' -w /root'
+    command += ' /usr/bin/env -i'
+    command += ' HOME=/root'
+    command += ' LANG=C.UTF-8'
+    command += ' PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin'
+    command += ' TERM=xterm-256color'
+    command += ' /bin/'
+    os.unsetenv('LD_PRELOAD')
+    if 'shell' in infos.keys():
+        command += infos.get('shell')
+    else:
+        command += 'bash'
+    command += ' --login'
+    if len(arg) > 1:
+        ext_com = ' '.join(arg[1:])
+        os.system(command + ' -c ' + ext_com)
+    else:
+        os.system(command)
 
-}
-function clean_tmp()
-{
-    tips "Cleaning tmps"
-    rm ${atilo_tmp}/*
-}
-function install_linux()
-{
-    cd $atilo_tmp
-    root=$atilo_home/$release_name
-    if [ ! -d ${root} ]; then
-        mkdir ${root}
-    fi
+def show_help():
+    print('Atilo\t\t' + atilo_version )
+    print('Usage: atilo [Command] [Argument]\n')
+    print('Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n')
+    print('Commands:')
+    print('list\t\t list available images')
+    print('remove\t\t remove installed images')
+    print('pull\t\t pulling an image')
+    print('run\t\t running a command in a new container.')
+    print('help\t\t show this help.\n')
+    
 
-    tips "[ Downloading ... ]"
-    if [ -f ${release_name} ]; then
-        tips "[ Skip download ]"
-    else
-        ls -A | xargs rm -rf 
-        curl "${url}" -o ${release_name} --progress-bar -C -
-    fi
-
-    tips "[ Extracting ... ]"
-    if [ "${release_name}" == "fedora" ]; then
-        tar xf fedora --strip-components=1 --exclude json --exclude VERSION
-        pv layer.tar|proot --link2symlink tar xpC ${root} 2>/dev/null
-        rm -f layer.tar
-        chmod +w ${root}
-    else
-        pv ${release_name} |proot --link2symlink tar ${zip}C ${root} 2>/dev/null
-    fi
-
-    tips "[ Configuring ...]"
-    rm -r ${root}/etc/resolv.conf 2>/dev/null
-    echo "nameserver 1.1.1.1
-nameserver 1.0.0.1
-nameserver 8.8.8.8
-nameserver 8.8.4.4" > ${root}/etc/resolv.conf
-    echo "export USER=root" >> ${root}/etc/profile
-
-    if [ ! -z "${mirrors}" ]; then
-        cd ${root}
-        echo -e "${mirrors}" > ${mirrorspath}
-    fi
-
-    cat > ${PREFIX}/bin/start${release_name} <<- EOM
-#!/data/data/com.termux/files/usr/bin/bash
-cd \$HOME/.atilo/
-unset LD_PRELOAD
-command="proot"
-command+=" --link2symlink"
-#command+=" -0"
-command+=" -S ${release_name}"
-#command+=" -b /system"
-command+=" -b /sdcard"
-command+=" -b /dev/"
-#command+=" -b /sys/"
-command+=" -b /proc/"
-#uncomment the following line to have access to the home directory of termux
-#command+=" -b /data/data/com.termux/files/home"
-command+=" -w /root"
-command+=" /usr/bin/env -i"
-command+=" HOME=/root"
-command+=" LANG=C.UTF-8"
-command+=" PATH=/bin:/usr/bin:/sbin:/usr/sbin:/usr/local/bin:/usr/local/sbin"
-command+=" TERM=xterm-256color"
-command+=" /bin/${sh} --login"
-export PROOT_NO_SECCOMP=1
-com="\$@"
-if [ -z "\$1" ];then
-    exec \$command
-else
-    \$command -c "\$com"
-fi
-EOM
-
-    chmod +x $PREFIX/bin/start${release_name}
-
-    tips "[ Upgrading ... ]"
-    start${release_name} ${upgrade}
-
-    tips "[ All done ]"
-    tips "start${release_name} To start"
-}
-
-function main()
-{
-    release_name=$2
-    case "$1" in
-        install|in)
-            check_for_arch
-            check_for_req
-            cd ${atilo_home}
-            sh=bash
-            select_linux ${release_name}
-            case ${time_arch} in
-                arm64)
-                    url=${aarch64}
-                ;;
-                armhf)
-                    url=${arm}
-                ;;
-                i386)
-                    url=${i386}
-                ;;
-                amd64)
-                    url=${amd64}
-                ;;
-            esac
-            select_linux ${release_name}
-            install_linux
-            ;;
-
-        remove|rm)
-            remove_linux
-            ;;
-        list|ls)
-            if [[ $2 == "--installed" ]]; then
-                local_linux
-            else
-                list_linux
-            fi
-            ;;
-        help)
-        show_usage
-            ;;
-        clean)
-            clean_tmp
-            ;;
-        moo)
-            show_moo
-            ;;
-        "")
-        show_usage
-        error "[ A command is needed ]"
-        ;;
-        *)
-            error "[ Unknown operation ]"
-            ;;
-    esac
-}
-
-main "$@"
+if __name__ == "__main__":
+    check_dir()
+    
+    if len(sys.argv) == 1:
+        show_help()
+        print('A command is needed.')
+        exit(1)
+    if sys.argv[1] == 'help':
+        show_help()
+    elif sys.argv[1] == 'pull':
+        if len(sys.argv) < 3:
+            print('You need to specific a image from list.')
+            exit(1)
+        elif len(sys.argv) >3:
+            print('Too many arguments.')
+            exit(1)
+        else:
+            pull_image(sys.argv[2])
+    elif sys.argv[1] == 'list':
+        show_list()
+    elif sys.argv[1] == 'remove':
+        if len(sys.argv) < 3:
+            print('You need to specific a image from list.')
+            exit(1)
+        elif len(sys.argv) >3:
+            print('Too many arguments.')
+            exit(1)
+        else:
+            remove_image(sys.argv[2])
+    elif sys.argv[1] == 'run':
+        if len(sys.argv) < 3:
+            print('You need to specific a image from list.')
+            exit(1)
+        else:
+            run_image(sys.argv[2:])
+    else:
+        print('Unknown command')
+        exit(1)
+    
+    
