@@ -20,7 +20,7 @@ home = os.getenv('HOME')
 atilo_home = home + '/.atilo/'
 atilo_tmp  = atilo_home + 'tmp/'
 atilo_config = atilo_home + 'local.json'
-atilo_version = "2.0-Alpha"
+atilo_version = "2.0"
 
 def check_dir():
     if not os.path.isdir(atilo_home):
@@ -259,6 +259,10 @@ def check_sum_ubuntu(distro,url):
         os.remove(file_path)
         exit(1)
 
+def clean_tmps():
+    print('正在清除缓存')
+    os.system('rm -rf ' + atilo_tmp + '*')
+
 def run_image(arg):
     distro = arg[0]
     config = load_local()
@@ -302,10 +306,10 @@ def run_image(arg):
 def show_help():
     print('Atilo\t\t' + atilo_version )
     print('Usage: atilo [命令] [参数]\n')
-    print('Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的脚本\n')
+    print('Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的程序\n')
     print('命令:')
     print('list\t\t 列出可用镜像')
-    print('remove\t\t 移除本地的镜像')
+    print('images\t\t 移除本地的镜像')
     print('pull\t\t 拉取远的镜像')
     print('run\t\t 运行镜像')
     print('help\t\t 帮助\n')
@@ -329,7 +333,7 @@ if __name__ == "__main__":
             exit(1)
         else:
             pull_image(sys.argv[2])
-    elif sys.argv[1] == 'list':
+    elif sys.argv[1] == 'images':
         show_list()
     elif sys.argv[1] == 'remove':
         if len(sys.argv) < 3:
@@ -346,6 +350,8 @@ if __name__ == "__main__":
             exit(1)
         else:
             run_image(sys.argv[2:])
+    elif sys.argv[1] == 'clean':
+        clean_tmps()
     else:
         print('未知命令')
         exit(1)

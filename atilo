@@ -19,7 +19,7 @@ home = os.getenv('HOME')
 atilo_home = home + '/.atilo/'
 atilo_tmp  = atilo_home + 'tmp/'
 atilo_config = atilo_home + 'local.json'
-atilo_version = "2.0-Alpha"
+atilo_version = "2.0"
 
 def check_dir():
     if not os.path.isdir(atilo_home):
@@ -238,6 +238,10 @@ def check_sum_ubuntu(distro,url):
         os.remove(file_path)
         exit(1)
 
+def clean_tmps():
+    print('Cleaning temporary files')
+    os.system('rm -rf ' + atilo_tmp + '*')
+
 def run_image(arg):
     distro = arg[0]
     config = load_local()
@@ -281,12 +285,13 @@ def run_image(arg):
 def show_help():
     print('Atilo\t\t' + atilo_version )
     print('Usage: atilo [Command] [Argument]\n')
-    print('Atilo is a bash script to help you install some GNU/Linux distributions on Termux.\n')
+    print('Atilo is a program to help you install some GNU/Linux distributions on Termux.\n')
     print('Commands:')
-    print('list\t\t list available images')
+    print('images\t\t list available images')
     print('remove\t\t remove installed images')
     print('pull\t\t pulling an image')
-    print('run\t\t running a command in a new container.')
+    print('run\t\t run an image')
+    print('clean\t\t clean tmps')
     print('help\t\t show this help.\n')
     
 
@@ -308,7 +313,7 @@ if __name__ == "__main__":
             exit(1)
         else:
             pull_image(sys.argv[2])
-    elif sys.argv[1] == 'list':
+    elif sys.argv[1] == 'images':
         show_list()
     elif sys.argv[1] == 'remove':
         if len(sys.argv) < 3:
@@ -325,8 +330,9 @@ if __name__ == "__main__":
             exit(1)
         else:
             run_image(sys.argv[2:])
+    elif sys.argv[1] == 'clean':
+        clean_tmps()
     else:
         print('Unknown command')
         exit(1)
-    
     
