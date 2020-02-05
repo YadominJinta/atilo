@@ -12,16 +12,17 @@ pkg in atilo-cn
 ## 使用方法
 
 ``` bash
-atilo [命令] [参数]
-Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的bash脚本。
+Atilo           2.0
+Usage: atilo [命令] [参数]
+
+Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的程序
 
 命令:
-list             列出可用的和已安装的发行版
-remove           移除已安装的发行版
-install          安装发行版
+list             列出可用镜像
+images           移除本地的镜像
+pull             拉取远的镜像
+run              运行镜像
 help             帮助
-作者 @YadominJinta @seashell11234455
-本atilo具有超级牛力
 ```
 
 ## 支持的发行版
@@ -34,7 +35,7 @@ help             帮助
 | Debian        |    √    |   √   |   √    |   √   |
 | Fedora        |    √    |   ×   |   √    |   ×   |
 | Kali          |    √    |   √   |   √    |   √   |
-| OpenSuSE      |    √    |   ×   |   √    |   √   |
+| openSUSE      |    √    |   ×   |   √    |   √   |
 | Ubuntu Cosmic |    √    |   √   |   √    |   √   |
 | Ubuntu LTS    |    √    |   √   |   √    |   √   |
 

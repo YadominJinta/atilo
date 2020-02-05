@@ -4,7 +4,7 @@
 .hy
 .SH NAME
 .PP
-atilo\-A bash script to install linux on termux
+atilo\-A program to install linux on termux
 .SH SYNOPSIS
 .PP
 atilo [OPTION] [distribution]
@@ -12,18 +12,22 @@ atilo [OPTION] [distribution]
 .PP
 Example:
 .PP
-atilo install debian
+atilo pull debian
 .PP
 Note
 .IP \[bu] 2
 Fedora 29 doesn't provode an image for arm,so you have to run dnf update --releasever=29 to update to 29.
 .SH OPTIONS
 .PP
-\f[B]install\f[] install distributions
+\f[B]pull\f[] pulling an image
 .PP
-\f[B]remove\f[] remove installed distributions
+\f[B]remove\f[] remove installed image
 .PP
-\f[B]list\f[] list available distributions
+\f[B]images\f[] list available images
+.PP
+\f[B]clean\f[] clean temps
+.PP
+\f[B]run\f[] run an image
 .SH COPYRIGHT
 .PP
 Author \@YadominJinta \@seashell11234455

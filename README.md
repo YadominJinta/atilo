@@ -1,6 +1,6 @@
 # Atilo
 
-A bash script to install linux on termux  
+A program to install linux on termux  
   
 中文用户[点击这里](https://github.com/YadominJinta/atilo/blob/master/CN/README_CN.md)
 
@@ -15,17 +15,18 @@ pkg in atilo
 
 ``` bash
 atilo [command] [Arguments]
-Atilo is a bash script to help you install some GNU/Linux distributions on Termux.
+Atilo           2.0
+Usage: atilo [Command] [Argument]
+
+Atilo is a program to help you install some GNU/Linux distributions on Termux.
 
 Commands:
-list             list available distributions
-   --installed   list installed distributions
-remove           remove installed distributions
-install          install distributions
-help             Show this help
-Writen by @YadominJinta @seashell11234455
-
-This atilo has super cow power
+images           list available images
+remove           remove installed images
+pull             pulling an image
+run              run an image
+clean            clean tmps
+help             show this help.
 ```
 
 ## Support Linux
@@ -34,13 +35,12 @@ This atilo has super cow power
 | ------------- | :-----: | :---: | :----: | :---: |
 | Arch          |    √    |   √   |   ×    |   ×   |
 | Alpine        |    √    |   √   |   √    |   √   |
-| CentOS        |    √    |   √   |   √    |   √   |
+| CentOS        |    √    |   ×   |   √    |   ×   |
 | Debian        |    √    |   √   |   √    |   √   |
 | Fedora        |    √    |   ×   |   √    |   ×   |
 | Kali          |    √    |   √   |   √    |   √   |
-| OpenSuSE      |    √    |   √   |   ×    |   ×   |
-| ParrotOS      |    √    |   √   |   √    |   √   |
-| Ubuntu Cosmic |    √    |   √   |   √    |   √   |
+| openSUSE      |    √    |   √   |   ×    |   ×   |
+| Ubuntu        |    √    |   √   |   √    |   √   |
 | Ubuntu LTS    |    √    |   √   |   √    |   √   |
 
 ## GUI
