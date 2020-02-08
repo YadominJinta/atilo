@@ -188,6 +188,7 @@ def extract_fedora():
     for i in zip_f.getnames():
         if i.__contains__('layer.tar'):
             zip_name = i
+    zip_f.extract(zip_name,atilo_tmp)
     zip_f.close()
     zip_f = tarfile.open(atilo_tmp + zip_name,'r')
     if not os.path.isdir(distro_path):
@@ -310,8 +311,9 @@ def show_help():
     print('命令:')
     print('images\t\t 列出可用镜像')
     print('remove\t\t 移除本地的镜像')
-    print('pull\t\t 拉取远的镜像')
+    print('pull\t\t 拉取远程的镜像')
     print('run\t\t 运行镜像')
+    print('clean\t\t 清除缓存')
     print('help\t\t 帮助\n')
     
 

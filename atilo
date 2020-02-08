@@ -167,6 +167,7 @@ def extract_fedora():
     for i in zip_f.getnames():
         if i.__contains__('layer.tar'):
             zip_name = i
+    zip_f.extract(zip_name,atilo_tmp)
     zip_f.close()
     zip_f = tarfile.open(atilo_tmp + zip_name,'r')
     if not os.path.isdir(distro_path):
