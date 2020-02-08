@@ -65,6 +65,7 @@
     },
     "opensuse": {
         "version": "Tumbleweed",
+        "lxc": true,
         "i386": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/opensuse/tumbleweed/i386/default/",
         "aarch64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/opensuse/tumbleweed/arm64/default/",
         "amd64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/opensuse/tumbleweed/amd64/default/",
