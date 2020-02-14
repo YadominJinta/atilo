@@ -58,9 +58,13 @@ def load_local():
     return config
 
 def get_list():
-    r = requests.get('https://github.com/YadominJinta/atilo/raw/master/src/list.json')
+    try:
+        r = requests.get('https://github.com/YadominJinta/atilo/raw/master/src/list.json')
+    except requests.exceptions.ConnectionError as e:
+        print('Can''t connect to GitHub. A Proxy may be needed.')
+        exit(1)
     if not r.status_code == 200:
-        print('Can''t get images lists.')
+        print('Can''t get image list.')
         exit(1)
     return r.json()
 

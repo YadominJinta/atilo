@@ -59,12 +59,13 @@ def load_local():
     return config
 
 def get_list():
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.87 Safari/537.36'
-    }
-    r = requests.get('https://github.com/YadominJinta/atilo/raw/master/src/list_cn.json',headers=headers)
+    try:
+        r = requests.get('https://raw.githack.com/YadominJinta/atilo/master/src/list_cn.json')
+    except requests.exceptions.ConnectionError:
+        print('无法连接到GitHub，可能需要代理')
+        exit(1)
     if not r.status_code == 200:
-        print('Can''t get images lists.')
+        print('无法获取镜像列表')
         exit(1)
     return r.json()
 
