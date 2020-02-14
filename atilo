@@ -259,7 +259,6 @@ def run_image(arg):
     command = ''
     command += 'proot'
     command += ' --link2symlink'
-    command += ' -0'
     command += ' -S '
     command += distro_path
     command += ' -b /sys'
