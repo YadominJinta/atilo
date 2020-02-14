@@ -88,6 +88,7 @@ def pull_image(distro):
     arch = check_arch()
     lists = get_list()
     config = load_local()
+    distro_tmp = atilo_tmp + distro
     if distro in config.keys():
         print(distro + '已被安装')
         exit(1)
@@ -103,21 +104,25 @@ def pull_image(distro):
         url = infos.get(arch) + time_stamp + '/rootfs.tar.xz'
     else:
         url = infos.get(arch)
-    print('拉取镜像中')
-    r = requests.get(url,stream=True)
-    if not r.status_code == 200:
-        print('无法拉取镜像')
-        print('网络错误')
-        exit(1)
-    total_size = int(r.headers.get('Content-Length'))
-    block_size = io.DEFAULT_BUFFER_SIZE
-    t = tqdm(total=total_size,unit='iB',unit_scale=True)
-    with open(atilo_tmp + distro,'wb') as f:
-        for chunk in r.iter_content(block_size):
-            t.update(len(chunk))
-            f.write(chunk)
-    r.close()
-    t.close()
+    if os.path.isfile(distro_tmp):
+        print(distro + '已缓存')
+        print('跳过下载')
+    else:
+        print('拉取镜像中')
+        r = requests.get(url,stream=True)
+        if not r.status_code == 200:
+            print('无法拉取镜像')
+            print('网络错误')
+            exit(1)
+        total_size = int(r.headers.get('Content-Length'))
+        block_size = io.DEFAULT_BUFFER_SIZE
+        t = tqdm(total=total_size,unit='iB',unit_scale=True)
+        with open(atilo_tmp + distro,'wb') as f:
+            for chunk in r.iter_content(block_size):
+                t.update(len(chunk))
+                f.write(chunk)
+        r.close()
+        t.close()
     if infos.get('check') == 'no':
         print(distro + '不支持校验')
         print('跳过校验')
@@ -175,11 +180,19 @@ def config_image(distro,infos):
 def extract_file(distro,zip_m):
     distro_path = atilo_home + distro
     file_path = atilo_tmp + distro
-    zip_f = tarfile.open(file_path,'r:'+zip_m)
-    if not os.path.isdir(distro_path):
+    if os.path.isdir(distro_path):
+        os.system('chmod -R 777 ' + distro_path)
+        os.system('rm -rf ' + distro_path)
+    if distro == 'arch':
+        print('解压镜像中')
         os.mkdir(distro_path)
-    print('解压镜像中')
-    zip_f.extractall(distro_path,numeric_owner=True)
+        os.system('proot --link2symlink tar -zxpf ' + file_path + ' -C ' + distro_path + ' 2>/dev/null')
+    else:
+        zip_f = tarfile.open(file_path,'r:'+zip_m)
+        if not os.path.isdir(distro_path):
+            os.mkdir(distro_path)
+        print('解压镜像中')
+        zip_f.extractall(distro_path,numeric_owner=True)
 
 def extract_fedora():
     file_path = atilo_tmp+ 'fedora'
