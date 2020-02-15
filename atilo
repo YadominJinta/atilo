@@ -33,9 +33,9 @@ def check_arch():
         pass
     elif arch == 'x86_64':
         arch = 'amd64'
-    elif arch.__contains__('86'):
+    elif '86' in arch:
         arch = 'i386'
-    elif arch.__contains__('arm'):
+    elif 'arm' in arch:
         arch = 'armhf'
     else:
         print('Your device''s arch are not in supoport')
@@ -78,8 +78,8 @@ def show_list():
         name = i
         infos = lists.get(name)
         version = infos.get ('version')
-        installed = (config.keys()).__contains__(name)
-        installable = (infos.keys()).__contains__(arch)
+        installed = name in config.keys()
+        installable = arch in infos.keys()
         table.add_row([name,version,installed,installable])
     print(table.get_string())
 
@@ -182,7 +182,7 @@ def extract_fedora():
     print('Extracting image')
     zip_f = tarfile.open(file_path)
     for i in zip_f.getnames():
-        if i.__contains__('layer.tar'):
+        if 'layer.tar' in i:
             zip_name = i
     zip_f.extract(zip_name,atilo_tmp)
     zip_f.close()
@@ -217,7 +217,7 @@ def check_sum(distro,url,check):
     t.close()
     f.close()
 
-    if r.text.__contains__(sum_calc.hexdigest()):
+    if sum_calc.hexdigest() in r.text:
         print('Checksum successfully')
         return 0
     else:
@@ -249,7 +249,7 @@ def check_sum_ubuntu(distro,url):
     t.close()
     f.close()
 
-    if r.text.__contains__(sum_calc.hexdigest()):
+    if sum_calc.hexdigest() in r.text:
         return 0
     else:
         print('Checksum error')
