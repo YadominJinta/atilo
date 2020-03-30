@@ -29,8 +29,8 @@ def check_dir():
 
 def check_arch():
     arch = os.uname().machine
-    if arch == 'aarch64':
-        pass
+    if arch == 'aarch64' or 'armv8' in arch:
+        arch = 'aarch64'
     elif arch == 'x86_64':
         arch = 'amd64'
     elif '86' in arch:
