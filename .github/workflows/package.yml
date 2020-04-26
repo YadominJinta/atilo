@@ -23,9 +23,9 @@ jobs:
       - name: Package
         id: package
         run: |
-          apt update
-          apt install curl -y
-          mkdir -p -v build/atilo/DEBIAN build/atilo-cn/DEBIAN debs
+          sudo apt update
+          sudo apt install curl -y
+          mkdir -p -v build/atilo/DEBIAN build/atilo-cn/DEBIAN build/debs
           chmod -v 700 build/atilo/DEBIAN
           chmod -v 700 build/atilo-cn/DEBIAN
           cd build
@@ -44,7 +44,7 @@ jobs:
           dpkg -b atilo debs/atilo.deb
           dpkg -b atilo-cn debs/atilo-cn.deb
           echo "::set-output name=STATUS::success"
-          echo "::set-env name=debs=$(realpath debs/)"
+          echo "::set-env name=debs::$(realpath debs/)"
 
 
       - name: Upload
