@@ -20,7 +20,7 @@ home = os.getenv('HOME')
 atilo_home = home + '/.atilo/'
 atilo_tmp  = atilo_home + 'tmp/'
 atilo_config = atilo_home + 'local.json'
-atilo_version = "2.0"
+atilo_version = "2.1.0"
 
 def check_dir():
     if not os.path.isdir(atilo_home):
@@ -60,7 +60,7 @@ def load_local():
 
 def get_list():
     try:
-        r = requests.get('https://raw.githack.com/YadominJinta/atilo/master/src/list_cn.json')
+        r = requests.get('https://cdn.jsdelivr.net/gh/YadominJinta/atilo@master/src/list_cn.json')
     except requests.exceptions.ConnectionError:
         print('无法连接到GitHub，可能需要代理')
         exit(1)
