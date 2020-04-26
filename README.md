@@ -1,13 +1,15 @@
 # Atilo
 
 A program to install linux on termux  
+
+![Test](https://github.com/YadominJinta/atilo/workflows/Test/badge.svg)
   
 中文用户[点击这里](https://github.com/YadominJinta/atilo/blob/master/CN/README_CN.md)
 
 ## Installation
 
 ``` bash
-echo "deb [trusted=yes] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list
+echo "deb [trusted=yes arch=all] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list
 pkg in atilo
 ```
 

@@ -1,11 +1,13 @@
 # Atilo
 
-在Termux安装Linux的bash脚本
+在Termux安装Linux
+
+![Test](https://github.com/YadominJinta/atilo/workflows/Test/badge.svg)
 
 ## 安装
 
 ``` bash
-echo "deb [trusted=yes] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list
+echo "deb [trusted=yes arch=all] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list
 pkg in atilo-cn
 ```
 
