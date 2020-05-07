@@ -7,10 +7,9 @@
         "fedora",
         "kali",
         "opensuse",
-        "ubuntu",
-        "ubuntults"
+        "ubuntu"
     ],
-    "update": "2020-01-30",
+    "update": "2020-05-07",
     "alpine": {
         "version": 3.11,
         "shell": "ash",
@@ -45,9 +44,9 @@
         "zip": "xz"
     },
     "fedora": {
-        "version": 31,
-        "aarch64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/31/Container/aarch64/images/Fedora-Container-Base-31-1.9.aarch64.tar.xz",
-        "amd64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/31/Container/x86_64/images/Fedora-Container-Base-31-1.9.x86_64.tar.xz",
+        "version": 32,
+        "aarch64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Container/aarch64/images/Fedora-Container-Base-32-1.6.aarch64.tar.xz",
+        "amd64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Container/x86_64/images/Fedora-Container-Base-32-1.6.x86_64.tar.xz",
         "check": "no",
         "zip": "fedora"
     },
@@ -68,20 +67,11 @@
         "zip": "xz"
     },
     "ubuntu": {
-        "version": "eoan",
-        "aarch64": "https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-arm64-root.tar.gz",
-        "armhf": "https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-armhf-root.tar.gz",
-        "amd64": "https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-amd64-root.tar.gz",
-        "i386": "https://partner-images.canonical.com/core/eoan/current/ubuntu-eoan-core-cloudimg-i386-root.tar.gz",
-        "check": "ubuntu",
-        "zip": "gz"
-    },
-    "ubuntults": {
-        "version": "bionic",
-        "aarch64": "https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-arm64-root.tar.gz",
-        "armhf": "https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-armhf-root.tar.gz",
-        "amd64": "https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-amd64-root.tar.gz",
-        "i386": "https://partner-images.canonical.com/core/bionic/current/ubuntu-bionic-core-cloudimg-i386-root.tar.gz",
+        "version": "focal",
+        "aarch64": "https://partner-images.canonical.com/core/focal/current/ubuntu-focal-core-cloudimg-arm64-root.tar.gz",
+        "armhf": "https://partner-images.canonical.com/core/focal/current/ubuntu-focal-core-cloudimg-armhf-root.tar.gz",
+        "amd64": "https://partner-images.canonical.com/core/focal/current/ubuntu-focal-core-cloudimg-amd64-root.tar.gz",
+        "i386": "https://partner-images.canonical.com/core/focal/current/ubuntu-focal-core-cloudimg-i386-root.tar.gz",
         "check": "ubuntu",
         "zip": "gz"
     }

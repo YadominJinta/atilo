@@ -7,10 +7,9 @@
         "fedora",
         "kali",
         "opensuse",
-        "ubuntu",
-        "ubuntults"
+        "ubuntu"
     ],
-    "update": "2020-01-30",
+    "update": "2020-05-07",
     "alpine": {
         "version": 3.11,
         "shell": "ash",
@@ -47,9 +46,9 @@
         "zip": "xz"
     },
     "fedora": {
-        "version": 31,
-        "aarch64": "https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/31/Container/aarch64/images/Fedora-Container-Base-31-1.9.aarch64.tar.xz",
-        "amd64": "https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/31/Container/x86_64/images/Fedora-Container-Base-31-1.9.x86_64.tar.xz",
+        "version": 32,
+        "aarch64": "https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/32/Container/x86_64/images/Fedora-Container-Base-32-1.6.aarch64.tar.xz",
+        "amd64": "https://mirrors.tuna.tsinghua.edu.cn/fedora/releases/32/Container/aarch64/images/Fedora-Container-Base-32-1.6.x86_64.tar.xz",
         "check": "no",
         "zip": "fedora"
     },
@@ -73,22 +72,12 @@
         "zip": "xz"
     },
     "ubuntu": {
-        "version": "eoan",
+        "version": "focal",
         "lxc": true,
-        "aarch64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/arm64/default/",
-        "armhf": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/armhf/default/",
-        "amd64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/amd64/default/",
-        "i386": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/eoan/i386/default/",
-        "check": "lxc",
-        "zip": "xz"
-    },
-    "ubuntults": {
-        "version": "bionic",
-        "lxc": true,
-        "aarch64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/arm64/default/",
-        "armhf": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/armhf/default/",
-        "amd64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/amd64/default/",
-        "i386": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/bionic/i386/default/",
+        "aarch64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/focal/arm64/default/",
+        "armhf": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/focal/armhf/default/",
+        "amd64": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/focal/amd64/default/",
+        "i386": "https://mirrors.tuna.tsinghua.edu.cn/lxc-images/images/ubuntu/focal/i386/default/",
         "check": "lxc",
         "zip": "xz"
     }
