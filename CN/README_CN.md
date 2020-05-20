@@ -1,11 +1,4 @@
 
-
-<!--
- * @Author: small_parking
- * @Date: 2020-05-20 14:16:06
- * @LastEditors: small_parking
- * @LastEditTime: 2020-05-20 14:19:41
---> 
 # Atilo
 
 在Termux安装Linux
