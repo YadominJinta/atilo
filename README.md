@@ -10,7 +10,7 @@ A program to install linux on termux
 
 ``` bash
 echo "deb [trusted=yes arch=all] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list.d/atilo.list
-pkg in atilo
+apt update && apt install atilo
 ```
 
 ## Usage

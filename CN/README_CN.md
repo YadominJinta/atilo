@@ -8,7 +8,7 @@
 
 ``` bash
 echo "deb [trusted=yes arch=all] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list.d/atilo.list
-pkg in atilo-cn
+apt update && apt install atilo-cn
 ```
 
 ## 使用方法
