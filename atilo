@@ -275,9 +275,6 @@ def run_image(arg):
     command += ' --link2symlink'
     command += ' -S '
     command += distro_path
-    command += ' -b /sys'
-    command += ' -b /dev'
-    command += ' -b /proc'
 #   command += ' -b /sdcard'
 #   command += ' -b /system'
 #   command += ' -b /data/data/com.termux/files/home'
