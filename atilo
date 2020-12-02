@@ -289,7 +289,18 @@ def run_image(arg):
     if 'shell' in infos.keys():
         command += infos.get('shell')
     else:
-        command += 'bash'
+        with open(distro_path+"/etc/passwd") as f:
+            passwd_dict={}
+            for line in f:
+                args = line.split(":")
+                passwd_dict[args[0]]=args[6]
+
+            shell=passwd_dict['root'].strip().split('/')
+            if (shell[-1] != '' and len(shell[-1]) != 0):
+                command += shell[-1]
+            else:
+                command += 'bash'
+
     command += ' --login'
     if len(arg) > 1:
         ext_com = ' '.join(arg[1:])
