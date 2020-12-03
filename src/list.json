@@ -36,9 +36,10 @@
         "zip": "xz"
     },
     "fedora": {
-        "version": 32,
-        "aarch64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Container/aarch64/images/Fedora-Container-Base-32-1.6.aarch64.tar.xz",
-        "amd64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/32/Container/x86_64/images/Fedora-Container-Base-32-1.6.x86_64.tar.xz",
+        "version": 33,
+        "aarch64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/33/Container/aarch64/images/Fedora-Container-Base-33-1.2.aarch64.tar.xz",
+        "amd64": "https://dl.fedoraproject.org/pub/fedora/linux/releases/33/Container/x86_64/images/Fedora-Container-Base-33-1.2.x86_64.tar.xz",
+        "armhf": "https://dl.fedoraproject.org/pub/fedora/linux/releases/33/Container/armhfp/images/Fedora-Container-Base-33-1.2.armhfp.tar.xz",
         "check": "no",
         "zip": "fedora"
     },

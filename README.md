@@ -38,11 +38,10 @@ help             show this help.
 | Alpine        |    √    |   √   |   √    |   √   |
 | CentOS        |    √    |   ×   |   √    |   ×   |
 | Debian        |    √    |   √   |   √    |   √   |
-| Fedora        |    √    |   ×   |   √    |   ×   |
+| Fedora        |    √    |   √   |   √    |   ×   |
 | Kali          |    √    |   √   |   √    |   √   |
 | openSUSE      |    √    |   √   |   ×    |   ×   |
 | Ubuntu        |    √    |   √   |   √    |   √   |
-| Ubuntu LTS    |    √    |   √   |   √    |   √   |
 
 ## GUI
 

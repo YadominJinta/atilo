@@ -35,11 +35,10 @@ help             帮助
 | Alpine        |    √    |   √   |   √    |   √   |
 | CentOS        |    √    |   √   |   √    |   √   |
 | Debian        |    √    |   √   |   √    |   √   |
-| Fedora        |    √    |   ×   |   √    |   ×   |
+| Fedora        |    √    |   √   |   √    |   ×   |
 | Kali          |    √    |   √   |   √    |   √   |
 | openSUSE      |    √    |   ×   |   √    |   √   |
-| Ubuntu Cosmic |    √    |   √   |   √    |   √   |
-| Ubuntu LTS    |    √    |   √   |   √    |   √   |
+| Ubuntu        |    √    |   √   |   √    |   √   |
 
 ## 图形
 
