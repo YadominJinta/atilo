@@ -183,16 +183,12 @@ def extract_file(distro,zip_m):
     if os.path.isdir(distro_path):
         os.system('chmod -R 777 ' + distro_path)
         os.system('rm -rf ' + distro_path)
-    if distro == 'arch':
-        print('解压镜像中')
+
+    zip_f = tarfile.open(file_path,'r:'+zip_m)
+    if not os.path.isdir(distro_path):
         os.mkdir(distro_path)
-        os.system('proot --link2symlink tar -zxpf ' + file_path + ' -C ' + distro_path + ' 2>/dev/null')
-    else:
-        zip_f = tarfile.open(file_path,'r:'+zip_m)
-        if not os.path.isdir(distro_path):
-            os.mkdir(distro_path)
-        print('解压镜像中')
-        zip_f.extractall(distro_path,numeric_owner=True)
+    print('解压镜像中')
+    zip_f.extractall(distro_path,numeric_owner=True)
 
 def extract_fedora():
     file_path = atilo_tmp+ 'fedora'

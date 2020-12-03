@@ -35,7 +35,6 @@ help             show this help.
 
 | Distribution  | aarch64 |  arm  | x86_64 | i686  |
 | ------------- | :-----: | :---: | :----: | :---: |
-| Arch          |    √    |   √   |   ×    |   ×   |
 | Alpine        |    √    |   √   |   √    |   √   |
 | CentOS        |    √    |   ×   |   √    |   ×   |
 | Debian        |    √    |   √   |   √    |   √   |
