@@ -18,7 +18,7 @@ chmod +x atilo init_atlio
 ## 使用方法
 
 ``` bash
-Atilo           2.0
+Atilo           2.1.0
 Usage: atilo [命令] [参数]
 
 Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的程序
