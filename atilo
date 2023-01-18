@@ -1,8 +1,8 @@
 #! /usr/bin/env python3
 
-# Copyright 2017-2020 by YadominJinta. All rights reserved.
-# https://github.com/YadominJinta/atilo has info about the project.
-# https://github.com/YadominJinta/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
+# Copyright 2017-2022 by WTNLXTBL. All rights reserved.
+# https://github.com/WTNLXTBL/atilo has info about the project.
+# https://github.com/WTNLXTBL/atilo/blob/master/CONTRIBUTORS.md Thank you for help.
 
 import os
 import tarfile
