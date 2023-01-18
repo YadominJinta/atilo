@@ -60,7 +60,7 @@ def load_local():
 
 def get_list():
     try:
-        r = requests.get('https://cdn.jsdelivr.net/gh/YadominJinta/atilo@master/src/list_cn.json')
+        r = requests.get('https://ghproxy.com/https://raw.githubusercontent.com/WTNLXTBL/atilo/master/src/list_cn.json')
     except requests.exceptions.ConnectionError:
         print('无法连接到GitHub，可能需要代理')
         exit(1)
@@ -183,12 +183,16 @@ def extract_file(distro,zip_m):
     if os.path.isdir(distro_path):
         os.system('chmod -R 777 ' + distro_path)
         os.system('rm -rf ' + distro_path)
-
-    zip_f = tarfile.open(file_path,'r:'+zip_m)
-    if not os.path.isdir(distro_path):
+    if distro == 'arch':
+        print('解压镜像中')
         os.mkdir(distro_path)
-    print('解压镜像中')
-    zip_f.extractall(distro_path,numeric_owner=True)
+        os.system('proot --link2symlink tar -zxpf ' + file_path + ' -C ' + distro_path + ' 2>/dev/null')
+    else:
+        zip_f = tarfile.open(file_path,'r:'+zip_m)
+        if not os.path.isdir(distro_path):
+            os.mkdir(distro_path)
+        print('解压镜像中')
+        zip_f.extractall(distro_path,numeric_owner=True)
 
 def extract_fedora():
     file_path = atilo_tmp+ 'fedora'
@@ -288,6 +292,9 @@ def run_image(arg):
     command += ' --link2symlink'
     command += ' -S '
     command += distro_path
+    command += ' -b /sys'
+    command += ' -b /dev'
+    command += ' -b /proc'
 #   command += ' -b /sdcard'
 #   command += ' -b /system'
 #   command += ' -b /data/data/com.termux/files/home'
