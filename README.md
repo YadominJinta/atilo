@@ -1,8 +1,8 @@
-# Atilo 
+#Atilo 
   
  在Termux安装Linux 
   
- ## 安装 
+ #安装 
   
  ``` bash 
  apt update && apt install git python
@@ -13,7 +13,7 @@ chmod +x atilo init_atilo
 ./atilo
  ``` 
   
- ## 使用方法 
+ #使用方法 
   
  ``` bash 
  Atilo           2.1.0 
@@ -30,7 +30,7 @@ chmod +x atilo init_atilo
  help             帮助 
  ``` 
   
- ## 支持的发行版 
+ #支持的发行版 
   
  | 发行版        | aarch64 |  arm  | x86_64 | i686  | 
  | ------------- | :-----: | :---: | :----: | :---: | 
@@ -42,11 +42,11 @@ chmod +x atilo init_atilo
  | openSUSE      |    √    |   ×   |   √    |   √   | 
  | Ubuntu        |    √    |   √   |   √    |   √   | 
   
- ## 图形 
+ #图形 
   
  [在termux上开启图形化](https://yadominjinta.github.io/2018/07/30/GUI-on-termux.html) 
     
- ## 相关项目 
+ #相关项目 
   
  **[EXALAB/AnLinux-App](https://github.com/EXALAB/AnLinux-App)**: APP to help install Linux on termux.   
  **[sdrausty/TermuxArch](https://github.com/sdrausty/TermuxArch)**: Arch install script   
