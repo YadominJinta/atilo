@@ -168,8 +168,8 @@ def config_image(distro,infos):
     if os.path.islink(resolv_conf):
         os.unlink(resolv_conf)
     with open(resolv_conf,'w') as f:
-        f.write('nameserver 1.1.1.1\n')
-        f.write('nameserver 8.8.8.8\n')
+        f.write('nameserver 223.5.5.5\n')
+        f.write('nameserver 223.6.6.6\n')
     config = load_local()
     config.update({distro : infos})
     with open(atilo_config,'w') as f:
