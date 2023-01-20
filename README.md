@@ -7,7 +7,7 @@
 ## 安装
 
 ``` bash
-apt update && apt install git python -y
+apt update && apt install git python python-pip -y
 git clone https://github.com/WTNLXTBL/atilo
 cd atilo
 chmod +x atilo init_atlio
