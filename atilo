@@ -298,7 +298,7 @@ def run_image(arg):
     command += ' -b /sdcard'
     command += ' -b /sdcard:/root/sdcard'
 #   command += ' -b /system'
-   command += ' -b /data/data/com.termux/files:/root/termux'
+    command += ' -b /data/data/com.termux/files:/root/termux'
     command += ' -w /root'
     command += ' /usr/bin/env -i'
     command += ' HOME=/root'
