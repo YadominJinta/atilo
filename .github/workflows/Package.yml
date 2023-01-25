@@ -33,7 +33,7 @@ jobs:
           cp ../atilo atilo/data/data/com.termux/files/usr/bin/atilo
           dpkg -b atilo debs/atilo.deb
           echo "::set-output name=STATUS::success"
-          echo "::set-sehll-env name=debs::$(realpath debs/)"
+          echo "::set-shell-env name=debs::$(realpath debs/)"
 
       - name: Upload
         if: steps.package.outputs.STATUS == 'success'
