@@ -34,6 +34,7 @@ jobs:
           dpkg -b atilo debs/atilo.deb
           echo "::set-output name=STATUS::success"
           export debs=$(realpath debs/)
+          echo "$debs"
 
       - name: Upload
         if: steps.package.outputs.STATUS == 'success'
