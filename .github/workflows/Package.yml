@@ -79,10 +79,3 @@
           if: steps.package.outputs.STATUS == 'success'
 
           uses: actions/upload-artifact@master
-
-          with:
-
-            name: debs
-
-            path: ${{ env.debs }}
-
