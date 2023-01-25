@@ -61,6 +61,8 @@
             dpkg -e atilo-cn.deb atilo-cn/DEBIAN
 
             export ATILOCN_VERSION=$(../atilo |head -n1|awk '{print $2}')
+            
+            export ACTIONS_ALLOW_UNSECURE_COMMANDS=true
 
             sed -i -E "s/^Version.*/Version:\ ${ATILOCN_VERSION}/g" atilo-cn/DEBIAN/control
 
