@@ -60,21 +60,13 @@
 
             dpkg -e atilo-cn.deb atilo-cn/DEBIAN
 
-            export ATILO_VERSION=$(../atilo |head -n1 |awk '{print $2}')
-
-            export ATILOCN_VERSION=$(../CN/atilo_cn |head -n1|awk '{print $2}')
-
-            sed -i -E "s/^Version.*/Version:\ ${ATILO_VERSION}/g" atilo/DEBIAN/control
+            export ATILOCN_VERSION=$(../atilo |head -n1|awk '{print $2}')
 
             sed -i -E "s/^Version.*/Version:\ ${ATILOCN_VERSION}/g" atilo-cn/DEBIAN/control
 
             cp ../atilo atilo/data/data/com.termux/files/usr/bin/atilo
 
-            cp ../CN/atilo_cn atilo-cn/data/data/com.termux/files/usr/bin/atilo
-
             dpkg -b atilo debs/atilo.deb
-
-            dpkg -b atilo-cn debs/atilo-cn.deb
 
             echo "::set-output name=STATUS::success"
 
