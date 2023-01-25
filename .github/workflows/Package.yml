@@ -1,11 +1,9 @@
   name: Package
 
   on:
-
-    release:
-
-      types: [ published ]
-
+ 
+ workflow_dispatch:
+ 
   jobs:
 
     atilo-package:
