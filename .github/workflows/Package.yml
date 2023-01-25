@@ -33,11 +33,11 @@ jobs:
           cp ../atilo atilo/data/data/com.termux/files/usr/bin/atilo
           dpkg -b atilo debs/atilo.deb
           echo "::set-output name=STATUS::success"
-          echo "::set-shell-env name=debs::$(realpath debs/)"
+          export debs=$(realpath debs/)
 
       - name: Upload
         if: steps.package.outputs.STATUS == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: debs
-          path: ${{ env.debs }}
+          path: $debs
