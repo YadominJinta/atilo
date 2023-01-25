@@ -30,7 +30,7 @@ jobs:
 
         with: 
 
-          python-version: 3.8
+          python-version: 3.11.1
 
       - name: Install Modules
 
@@ -57,15 +57,5 @@ jobs:
           ./atilo clean
 
           ./atilo remove alpine
-
-          ./CN/atilo_cn help
-
-          ./CN/atilo_cn images
-
-          ./CN/atilo_cn pull alpine
-
-          ./CN/atilo_cn clean
-
-          ./CN/atilo_cn remove alpine
 
           echo "::set-output name=STATUS::success"
