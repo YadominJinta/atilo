@@ -34,11 +34,10 @@ jobs:
           dpkg -b atilo debs/atilo.deb
           echo "::set-output name=STATUS::success"
           export debs=$(realpath debs/)
-          echo "$debs"
 
       - name: Upload
         if: steps.package.outputs.STATUS == 'success'
         uses: actions/upload-artifact@v3
         with:
           name: debs
-          path: $debs
+          path: "/home/runner/work/atilo/atilo/build/debs"
