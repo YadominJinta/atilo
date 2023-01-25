@@ -3,6 +3,7 @@
         "alpine",
         "centos",
         "debian",
+        "devuan",
         "fedora",
         "kali",
         "opensuse",
@@ -37,6 +38,16 @@
         "check": "lxc",
         "zip": "xz"
     },
+    "devuan": {
+       "version": "chimaera",
+       "lxc": true,
+       "aarch64": "https://mirrors.bfsu.edu.cn/lxc-images/images/devuan/chimaera/arm64/default/",
+       "armhf": "https://mirrors.bfsu.edu.cn/lxc-images/images/devuan/chimaera/armhf/default/",
+       "amd64": "https://mirrors.bfsu.edu.cn/lxc-images/images/devuan/chimaera/amd64/default/",
+       "i386": "https://mirrors.bfsu.edu.cn/lxc-images/images/devuan/chimaera/i386/default/",
+       "check": "lxc",
+       "zip": "xz"
+       },
     "fedora": {
         "version": 37,
         "aarch64": "https://mirrors.bfsu.edu.cn/fedora/releases/37/Container/aarch64/images/Fedora-Container-Base-37-1.7.aarch64.tar.xz",
