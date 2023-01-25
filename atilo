@@ -60,7 +60,7 @@ def load_local():
 
 def get_list():
     try:
-        r = requests.get('https://ghproxy.com/https://raw.githubusercontent.com/WTNLXTBL/atilo/master/src/list_cn.json')
+        r = requests.get('https://cdn.jsdelivr.net/gh/WTNLXTBL/atilo@master/src/list_cn.json')
     except requests.exceptions.ConnectionError:
         print('无法连接到GitHub，可能需要代理')
         exit(1)
