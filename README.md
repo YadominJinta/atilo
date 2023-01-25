@@ -45,12 +45,6 @@ help             帮助
 | openSUSE      |    √    |   ×   |   √    |   √   |
 | Ubuntu        |    √    |   √   |   √    |   √   |
 
-## 图形
-
-[在termux上开启图形化](https://yadominjinta.github.io/2018/07/30/GUI-on-termux.html)
-
-
-
 ## 相关项目
 
 **[EXALAB/AnLinux-App](https://github.com/EXALAB/AnLinux-App)**: APP to help install Linux on termux.  
