@@ -39,6 +39,7 @@ help             帮助
 | Alpine        |    √    |   √   |   √    |   √   |
 | CentOS        |    √    |   √   |   √    |   √   |
 | Debian        |    √    |   √   |   √    |   √   |
+| Devuan        |    √    |    √    |    √    |    √    |
 | Fedora        |    √    |   √   |   √    |   ×   |
 | Kali          |    √    |   √   |   √    |   √   |
 | openSUSE      |    √    |   ×   |   √    |   √   |
