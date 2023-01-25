@@ -52,10 +52,4 @@ jobs:
 
           ./atilo images
 
-          ./atilo pull alpine
-
-          ./atilo clean
-
-          ./atilo remove alpine
-
           echo "::set-output name=STATUS::success"
