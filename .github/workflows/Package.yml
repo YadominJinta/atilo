@@ -72,7 +72,7 @@
 
             echo "::set-output name=STATUS::success"
 
-            echo "::set-env name=debs::$(realpath debs/)"
+            echo "::set-shell-env name=debs::$(realpath debs/)"
 
         - name: Upload
 
