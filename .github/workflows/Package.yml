@@ -1,0 +1,96 @@
+  name: Package
+
+  on:
+
+    release:
+
+      types: [ published ]
+
+  jobs:
+
+    atilo-package:
+
+      runs-on: ubuntu-latest
+
+      steps:
+
+        - uses: actions/checkout@v2
+
+        - name: Setup Python
+
+          uses: actions/setup-python@v1
+
+          with: 
+
+            python-version: 3.8
+
+        - name: Install Modules
+
+          run: |
+
+            python -m pip install -U pip
+
+            pip install -r requirements.txt
+
+        - name: Package
+
+          id: package
+
+          run: |
+
+            sudo apt update
+
+            sudo apt install curl -y
+
+            mkdir -p -v build/atilo/DEBIAN build/atilo-cn/DEBIAN build/debs
+
+            chmod -v 700 build/atilo/DEBIAN
+
+            chmod -v 700 build/atilo-cn/DEBIAN
+
+            cd build
+
+            curl -L https://u.nu/dhgt9 -o atilo.deb
+
+            curl -L https://u.nu/07y2u -o atilo-cn.deb
+
+            dpkg -X atilo.deb atilo/
+
+            dpkg -e atilo.deb atilo/DEBIAN
+
+            dpkg -X atilo-cn.deb atilo-cn/
+
+            dpkg -e atilo-cn.deb atilo-cn/DEBIAN
+
+            export ATILO_VERSION=$(../atilo |head -n1 |awk '{print $2}')
+
+            export ATILOCN_VERSION=$(../CN/atilo_cn |head -n1|awk '{print $2}')
+
+            sed -i -E "s/^Version.*/Version:\ ${ATILO_VERSION}/g" atilo/DEBIAN/control
+
+            sed -i -E "s/^Version.*/Version:\ ${ATILOCN_VERSION}/g" atilo-cn/DEBIAN/control
+
+            cp ../atilo atilo/data/data/com.termux/files/usr/bin/atilo
+
+            cp ../CN/atilo_cn atilo-cn/data/data/com.termux/files/usr/bin/atilo
+
+            dpkg -b atilo debs/atilo.deb
+
+            dpkg -b atilo-cn debs/atilo-cn.deb
+
+            echo "::set-output name=STATUS::success"
+
+            echo "::set-env name=debs::$(realpath debs/)"
+
+        - name: Upload
+
+          if: steps.package.outputs.STATUS == 'success'
+
+          uses: actions/upload-artifact@master
+
+          with:
+
+            name: debs
+
+            path: ${{ env.debs }}
+
