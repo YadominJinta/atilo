@@ -20,7 +20,7 @@ home = os.getenv('HOME')
 atilo_home = home + '/.atilo/'
 atilo_tmp  = atilo_home + 'tmp/'
 atilo_config = atilo_home + 'local.json'
-atilo_version = "2.1.0"
+atilo_version = "2.2.0"
 
 def check_dir():
     if not os.path.isdir(atilo_home):
