@@ -23,7 +23,7 @@ jobs:
         run: |
           sudo apt update
           sudo apt install curl -y
-          mkdir -p -v build/atilo/DEBIAN build/atilo-cn/DEBIAN build/debs
+          mkdir -p -v build/atilo/DEBIAN
           chmod -v 700 build/atilo/DEBIAN
           cd build
           curl -L https://u.nu/dhgt9 -o atilo.deb
