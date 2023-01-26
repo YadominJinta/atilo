@@ -1,0 +1,5 @@
+#!/data/data/com.termux/files/usr/bin/bash
+pip3 install requests \
+             tqdm \
+             PTable \
+             bs4

@@ -1,57 +1,51 @@
 # Atilo
 
-A program to install linux on termux  
+在Termux安装Linux
 
-![Test](https://github.com/YadominJinta/atilo/workflows/Test/badge.svg)
-  
-中文用户[点击这里](https://github.com/YadominJinta/atilo/blob/master/CN/README_CN.md)
 
-## Installation
+
+## 安装
 
 ``` bash
-echo "deb [trusted=yes arch=all] https://yadominjinta.github.io/files/ termux extras" >> $PREFIX/etc/apt/sources.list.d/atilo.list
-apt update && apt install atilo
+apt update && apt install git python python-pip -y
+git clone https://github.com/WTNLXTBL/atilo
+cd atilo
+chmod +x atilo init_atlio
+./init_atilo
+./atilo help
 ```
 
-## Usage
+## 使用方法
 
 ``` bash
-atilo [command] [Arguments]
-Atilo           2.0
-Usage: atilo [Command] [Argument]
+Atilo           2.2.0
+Usage: atilo [命令] [参数]
 
-Atilo is a program to help you install some GNU/Linux distributions on Termux.
+Atilo 是一个用来帮助你在termux上安装不同的GNU/Linux发行版的程序
 
-Commands:
-images           list available images
-remove           remove installed images
-pull             pulling an image
-run              run an image
-clean            clean tmps
-help             show this help.
+命令:
+images           列出可用镜像
+remove           移除本地的镜像
+pull             拉取远的镜像
+run              运行镜像
+clean            清除缓存
+help             帮助
 ```
 
-## Support Linux
+## 支持的发行版
 
-| Distribution  | aarch64 |  arm  | x86_64 | i686  |
+| 发行版        | aarch64 |  arm  | x86_64 | i686  |
 | ------------- | :-----: | :---: | :----: | :---: |
 | Alpine        |    √    |   √   |   √    |   √   |
-| CentOS        |    √    |   ×   |   √    |   ×   |
+| CentOS        |    √    |   √   |   √    |   √   |
 | Debian        |    √    |   √   |   √    |   √   |
+| Devuan        |    √    |    √    |    √    |    √    |
 | Fedora        |    √    |   √   |   √    |   ×   |
 | Kali          |    √    |   √   |   √    |   √   |
-| openSUSE      |    √    |   √   |   ×    |   ×   |
+| openSUSE      |    √    |   ×   |   √    |   √   |
 | Ubuntu        |    √    |   √   |   √    |   √   |
 
-## GUI
-
-[Using GUI on termux](https://yadominjinta.github.io/2018/08/18/GUI-on-termux-EN.html)
-
-## Group
-
-Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
-
-# Relate Projects
+## 相关项目
 
 **[EXALAB/AnLinux-App](https://github.com/EXALAB/AnLinux-App)**: APP to help install Linux on termux.  
 **[sdrausty/TermuxArch](https://github.com/sdrausty/TermuxArch)**: Arch install script  
@@ -59,5 +53,8 @@ Telegram:[Termux Group ZH_CN](https://t.me/joinchat/EBPa7EI3VrfhsRu-6iJ1yw)
 **[Hax4us/Nethunter-In-Termux](https://github.com/Hax4us/Nethunter-In-Termux)**: Install Kali nethunter (Kali Linux) in your termux application without rooted phone  
 **[nmilosev/termux-fedora](https://github.com/nmilosev/termux-fedora)**: A script to install a Fedora chroot into Termux  
 **[sp4rkie/debian-on-termux](https://github.com/sp4rkie/debian-on-termux)**: Install Debian 9 (stretch) on your Android smartphone
+**[Hax4us/TermuxAlpine](https://github.com/Hax4us/TermuxAlpine)**: Use TermuxAlpine.sh calling to install Alpine Linux in Termux on Android
 
-**[Hax4us/TermuxAlpine](https://github.com/Hax4us/TermuxAlpine)**: Use TermuxAlpine.sh calling to install Alpine Linux in Termux on Android  
+**[Proot简明手册](https://github.com/myfreess/Mytermuxdoc/wiki/Proot)**:帮助Termux用户编写proot脚本的简明指南
+
+## Continuously updating
